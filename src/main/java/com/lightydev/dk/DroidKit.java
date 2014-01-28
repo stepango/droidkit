@@ -16,11 +16,46 @@
 
 package com.lightydev.dk;
 
+import android.os.AsyncTask;
+import android.os.Build;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
 public final class DroidKit {
+
+  public static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
+
+    private final AtomicInteger mSequence = new AtomicInteger();
+
+    @Override
+    public Thread newThread(Runnable r) {
+      return new Thread(r, "AsyncTask #" + mSequence.incrementAndGet());
+    }
+
+  };
+
+  public static final Executor THREAD_POOL_EXECUTOR;
+
+  static {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+      THREAD_POOL_EXECUTOR = AsyncTask.THREAD_POOL_EXECUTOR;
+    } else {
+      final int cpuCount = Runtime.getRuntime().availableProcessors();
+      THREAD_POOL_EXECUTOR = new ThreadPoolExecutor(
+          cpuCount + 1, cpuCount * 2 + 1, 1, TimeUnit.SECONDS,
+          new LinkedBlockingQueue<Runnable>(128), THREAD_FACTORY
+      );
+    }
+  }
 
   private DroidKit() {
   }

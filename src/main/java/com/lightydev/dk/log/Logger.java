@@ -92,9 +92,11 @@ public final class Logger {
     }
     final StringBuilder message = new StringBuilder(256)
         .append("[").append(Thread.currentThread().getName()).append("]")
-        .append(" ").append(caller).append(":\n");
-    if (!TextUtils.isEmpty(format)) {
+        .append(" ").append(caller).append("\n");
+    if (args.length > 0) {
       message.append(String.format(Locale.US, format, args));
+    } else {
+      message.append(format);
     }
     return message.toString();
   }
