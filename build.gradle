@@ -34,8 +34,8 @@ android {
   defaultConfig {
     minSdkVersion 9
     targetSdkVersion 19
-    versionCode 1
-    versionName "1.0"
+    versionCode 201
+    versionName "2.0.1"
   }
 
   compileOptions {
@@ -68,7 +68,7 @@ uploadArchives {
       repository(url: uri('../maven'))
       pom.groupId = 'com.lightydev'
       pom.artifactId = 'droidkit'
-      pom.version = '2.0.0'
+      pom.version = '2.0.1'
     }
   }
 }
