@@ -79,9 +79,6 @@ public class AsyncHttpEntry implements Runnable {
   }
 
   public AsyncHttpEntry setBody(HttpBody body) {
-    if (body == null) {
-      throw new NullPointerException("HttpBody can not be null");
-    }
     if (TextUtils.equals(mMethod, GET) || TextUtils.equals(mMethod, DELETE)) {
       if (mUrl.contains(HttpBody.QUERY_SEPARATOR)) {
         mUrl += (HttpBody.PARAMETER_SEPARATOR + body);
@@ -110,17 +107,11 @@ public class AsyncHttpEntry implements Runnable {
   }
 
   public AsyncHttpEntry setCachePolicy(CachePolicy cachePolicy) {
-    if (cachePolicy == null) {
-      throw new NullPointerException("CachePolicy can not be null");
-    }
     mCachePolicy.set(cachePolicy);
     return this;
   }
 
   public AsyncHttpEntry setRetryPolicy(RetryPolicy retryPolicy) {
-    if (retryPolicy == null) {
-      throw new NullPointerException("RetryPolicy can not be null");
-    }
     mRetryPolicy.set(retryPolicy);
     return this;
   }

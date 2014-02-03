@@ -27,7 +27,7 @@ import java.net.HttpURLConnection;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-class HttpStatus {
+final class HttpStatus {
 
   private static final SparseArray<String> STATUS_ARRAY = new SparseArray<>();
 
@@ -45,6 +45,9 @@ class HttpStatus {
         Logger.quiet("%s", e);
       }
     }
+  }
+
+  private HttpStatus() {
   }
 
   public static String getLine(int statusCode) {

@@ -90,7 +90,7 @@ public final class Http {
 
     public static void start() {
       if (GUARD.getAndIncrement() == 0 && !QUEUE.isEmpty()) {
-        DroidKit.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+        DroidKit.EXECUTOR.execute(new Runnable() {
           @Override
           public void run() {
             while (!QUEUE.isEmpty()) {
@@ -103,21 +103,15 @@ public final class Http {
 
     public static void stop() {
       if (GUARD.decrementAndGet() == 0 && isInDebugMode()) {
-        Logger.debug("%s", DroidKit.THREAD_POOL_EXECUTOR);
+        Logger.debug("%s", DroidKit.EXECUTOR);
       }
     }
 
     public static void setCacheStore(CacheStore cacheStore) {
-      if (cacheStore == null) {
-        throw new NullPointerException("CacheStore can not be null");
-      }
       CACHE_STORE.set(cacheStore);
     }
 
     public static void setCookieStore(CookieStore cookieStore) {
-      if (cookieStore == null) {
-        throw new NullPointerException("CookieStore can not be null");
-      }
       COOKIE_STORE.set(cookieStore);
     }
 
@@ -131,7 +125,7 @@ public final class Http {
 
     static void enqueue(Runnable entry) {
       if (GUARD.get() > 0) {
-        DroidKit.THREAD_POOL_EXECUTOR.execute(entry);
+        DroidKit.EXECUTOR.execute(entry);
       } else {
         QUEUE.add(entry);
       }

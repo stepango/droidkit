@@ -21,7 +21,7 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:+'
-    classpath 'com.lightydev.dk:gradle:+'
+    classpath 'com.lightydev:gradle:+'
   }
 }
 
@@ -57,3 +57,18 @@ dependencies {
 }
 
 apply plugin: 'android-checkstyle'
+apply plugin: 'android-pmd'
+apply plugin: 'android-findbugs'
+
+apply plugin: 'maven'
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: uri('../maven'))
+      pom.groupId = 'com.lightydev'
+      pom.artifactId = 'droidkit'
+      pom.version = '2.0.0'
+    }
+  }
+}

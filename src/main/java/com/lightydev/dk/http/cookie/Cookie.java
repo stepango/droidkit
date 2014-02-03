@@ -18,17 +18,12 @@ package com.lightydev.dk.http.cookie;
 
 import android.text.TextUtils;
 
-import com.lightydev.dk.http.HttpDate;
 import com.lightydev.dk.util.Reflect;
 
+import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
@@ -36,52 +31,28 @@ import java.util.regex.Pattern;
  */
 public class Cookie implements Comparable<Cookie> {
 
-  private static final Set<String> RESERVED_NAMES = new HashSet<>();
+  private final HttpCookie mNativeCookie;
 
-  static {
-    RESERVED_NAMES.add("comment");    //           RFC 2109  RFC 2965
-    RESERVED_NAMES.add("commenturl"); //                     RFC 2965
-    RESERVED_NAMES.add("discard");    //                     RFC 2965
-    RESERVED_NAMES.add("domain");     // Netscape  RFC 2109  RFC 2965
-    RESERVED_NAMES.add("expires");    // Netscape
-    RESERVED_NAMES.add("max-age");    //           RFC 2109  RFC 2965
-    RESERVED_NAMES.add("path");       // Netscape  RFC 2109  RFC 2965
-    RESERVED_NAMES.add("port");       //                     RFC 2965
-    RESERVED_NAMES.add("secure");     // Netscape  RFC 2109  RFC 2965
-    RESERVED_NAMES.add("version");    //           RFC 2109  RFC 2965
+  private long mLastModified;
+
+  private Cookie(HttpCookie nativeCookie) {
+    mNativeCookie = nativeCookie;
   }
 
-  private static final ThreadLocal<Parser> PARSER = new ThreadLocal<Parser>() {
-    @Override
-    protected Parser initialValue() {
-      return new Parser();
-    }
-  };
-
-  private final String mName;
-
-  private final String mValue;
-
-  private long mExpires;
-
-  private String mPath;
-
-  private String mDomain;
-
   public Cookie(String name, String value) {
-    name = name.trim();
-    if (RESERVED_NAMES.contains(name)) {
-      throw new IllegalArgumentException("Wrong cookie name (name reserved by RFC 2965 or RFC 2109)");
-    }
-    mName = name;
-    mValue = value;
+    mNativeCookie = new HttpCookie(name, value);
   }
 
   public static List<Cookie> parse(String header) {
     if (TextUtils.isEmpty(header)) {
       return Collections.emptyList();
     }
-    return PARSER.get().parse(header);
+    final List<HttpCookie> nativeCookies = HttpCookie.parse(header);
+    final List<Cookie> cookies = new ArrayList<>(nativeCookies.size());
+    for (final HttpCookie nativeCookie : nativeCookies) {
+      cookies.add(new Cookie(nativeCookie));
+    }
+    return cookies;
   }
 
   public static List<Cookie> parse(List<String> headers) {
@@ -89,70 +60,43 @@ public class Cookie implements Comparable<Cookie> {
       return Collections.emptyList();
     }
     final List<Cookie> cookies = new ArrayList<>();
-    for (final String value : headers) {
-      cookies.addAll(parse(value));
+    for (final String header : headers) {
+      cookies.addAll(parse(header));
     }
     return cookies;
   }
 
   public static boolean domainMatches(String cookieDomain, String uriHost) {
-    if (!TextUtils.isEmpty(cookieDomain) && !TextUtils.isEmpty(uriHost)) {
-      cookieDomain = cookieDomain.toLowerCase(Locale.US);
-      uriHost = uriHost.toLowerCase(Locale.US);
-      return isFullyQualifiedDomainName(cookieDomain) && uriHost.matches("(.*\\.)?" + cookieDomain);
-    }
-    return false;
+    return HttpCookie.domainMatches(cookieDomain, uriHost);
   }
 
-  public static boolean pathMatches(String cookiePath, String uriPath) {
-    return TextUtils.equals(cookiePath.toLowerCase(), uriPath.toLowerCase());
+  @Override
+  public int compareTo(Cookie another) {
+    return 0;
   }
 
-  public static String pathToCookiePath(String path) {
-    if (path == null) {
-      return "/";
-    }
-    return path.substring(0, path.lastIndexOf('/') + 1);
-  }
-
-  public static boolean isFullyQualifiedDomainName(String name) {
-    if (name.startsWith(".")) {
-      name = name.substring(1);
-    }
-    final int dot = name.indexOf('.');
-    return dot != -1 && dot < name.length() - 1;
-  }
-
-  public void setExpires(long expires) {
-    mExpires = expires;
+  public void setLastModified(long lastModified) {
+    mLastModified = lastModified;
   }
 
   public boolean isExpired(long time) {
-    return mExpires < time;
+    return mNativeCookie.hasExpired() && (mLastModified + mNativeCookie.getMaxAge()) < time;
   }
 
   public String getPath() {
-    return mPath;
-  }
-
-  public void setPath(String path) {
-    mPath = path;
+    return mNativeCookie.getPath();
   }
 
   public String getDomain() {
-    return mDomain;
-  }
-
-  public void setDomain(String domain) {
-    mDomain = domain;
+    return mNativeCookie.getDomain();
   }
 
   public String getName() {
-    return mName;
+    return mNativeCookie.getName();
   }
 
   public String getValue() {
-    return mValue;
+    return mNativeCookie.getValue();
   }
 
   @Override
@@ -163,65 +107,18 @@ public class Cookie implements Comparable<Cookie> {
     if (!Reflect.classEquals(this, o)) {
       return false;
     }
-    final Cookie cookie = (Cookie) o;
-    return TextUtils.equals(mDomain, cookie.mDomain)
-        && TextUtils.equals(mName, cookie.mName)
-        && TextUtils.equals(mPath, cookie.mPath);
+    final Cookie another = (Cookie) o;
+    return !(mNativeCookie != null ? !mNativeCookie.equals(another.mNativeCookie) : another.mNativeCookie != null);
   }
 
   @Override
   public int hashCode() {
-    int result = mDomain != null ? mDomain.hashCode() : 0;
-    result = 31 * result + (mName != null ? mName.hashCode() : 0);
-    result = 31 * result + (mPath != null ? mPath.hashCode() : 0);
-    return result;
+    return mNativeCookie != null ? mNativeCookie.hashCode() : 0;
   }
 
   @Override
   public String toString() {
-    return mName + "=" + mValue;
-  }
-
-  @Override
-  public int compareTo(Cookie another) {
-    return 0;
-  }
-
-  private static class Parser {
-
-    private static final Pattern sCookiePattern = Pattern.compile("([^=]+)=([^;]+);?");
-
-    public List<Cookie> parse(String header) {
-      final List<Cookie> cookies = new ArrayList<>();
-      final Matcher matcher = sCookiePattern.matcher(header);
-      Cookie cookie = null;
-      while (matcher.find()) {
-        final String key = matcher.group(1).trim();
-        final String value = matcher.group(2).trim();
-        if (cookie == null) {
-          cookie = new Cookie(key, value);
-        } else {
-          setAttribute(cookie, key, value);
-        }
-      }
-      cookies.add(cookie);
-      return cookies;
-    }
-
-    private void setAttribute(Cookie cookie, String name, String value) {
-      switch (name) {
-        case "expires":
-          cookie.setExpires(HttpDate.parse(value).getTime());
-          break;
-        case "path":
-          cookie.setPath(value);
-          break;
-        case "domain":
-          cookie.setDomain(value);
-          break;
-      }
-    }
-
+    return getName() + "=" + getValue();
   }
 
 }

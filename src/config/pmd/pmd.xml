@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="ruleset" xmlns="http://pmd.sf.net/ruleset/1.0.0"
+<ruleset name="ruleset" xmlns="http://pmd.sf.net/ruleset/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
     xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
   <rule ref="rulesets/java/basic.xml" />
@@ -32,6 +32,8 @@
     <exclude name="AtLeastOneConstructor" />
     <exclude name="UseConcurrentHashMap" />
     <exclude name="AvoidLiteralsInIfCondition" />
+    <exclude name="OneDeclarationPerLine" />
+    <exclude name="DefaultPackage" />
   </rule>
   <rule ref="rulesets/java/android.xml">
     <exclude name="ProtectLogV" />

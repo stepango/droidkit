@@ -14,35 +14,33 @@
  * limitations under the License.
  */
 
-package com.lightydev.dk;
+package com.lightydev.dk.sqlite;
 
-import android.content.ComponentName;
-import android.content.ContentProvider;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.content.pm.ProviderInfo;
-
-import com.lightydev.dk.concurrent.CpuCoreExecutor;
-
-import java.util.concurrent.Executor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public final class DroidKit {
+class SQLiteHelper extends SQLiteOpenHelper {
 
-  public static final Executor EXECUTOR = new CpuCoreExecutor();
+  private final SQLiteSchema mSchema;
 
-  private DroidKit() {
+  public SQLiteHelper(Context context, SQLiteSchema schema) {
+    super(context, schema.getName(), null, schema.getVersion());
+    mSchema = schema;
   }
 
-  public static ProviderInfo getProviderInfo(Context context, Class<? extends ContentProvider> provider, int flags)
-      throws PackageManager.NameNotFoundException {
-    return context.getPackageManager().getProviderInfo(new ComponentName(
-        context.getPackageName(),
-        provider.getName()
-    ), flags);
+  @Override
+  public void onCreate(SQLiteDatabase db) {
+    mSchema.onCreate(db);
+  }
+
+  @Override
+  public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    mSchema.onUpgrade(db, oldVersion, newVersion);
   }
 
 }

@@ -16,13 +16,50 @@
 
 package com.lightydev.dk.util;
 
+import com.lightydev.dk.log.Logger;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
 public final class Reflect {
 
+  private static final Map<Class<?>, Class<?>> BOXING = new ConcurrentHashMap<>();
+
+  static {
+    BOXING.put(Byte.class, byte.class);
+    BOXING.put(Short.class, short.class);
+    BOXING.put(Integer.class, int.class);
+    BOXING.put(Long.class, long.class);
+    BOXING.put(Float.class, float.class);
+    BOXING.put(Double.class, double.class);
+  }
+
   private Reflect() {
+  }
+
+  public static Method findMethod(Class<?> clazz, String methodName, Class<?>... args) throws NoSuchMethodException {
+    do {
+      try {
+        return clazz.getDeclaredMethod(methodName, args);
+      } catch (NoSuchMethodException e) {
+        Logger.quiet("%s", e);
+      }
+    } while ((clazz = clazz.getSuperclass()) != null);
+    throw new NoSuchMethodException(methodName);
+  }
+
+  public static Object invokeQuietly(Object object, String methodName, Object... args) {
+    try {
+      return invoke(object, findMethod(object.getClass(), methodName, getClasses(true, args)), args);
+    } catch (NoSuchMethodException e) {
+      return null;
+    }
   }
 
   public static boolean classEquals(Object o1, Object o2) {
@@ -34,6 +71,28 @@ public final class Reflect {
       return o.hashCode();
     }
     return 0;
+  }
+
+  private static Object invoke(Object object, Method method, Object... args) {
+    method.setAccessible(true);
+    try {
+      return method.invoke(object, args);
+    } catch (IllegalAccessException | InvocationTargetException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static Class<?>[] getClasses(boolean boxing, Object... args) {
+    final Class<?>[] classes = new Class<?>[args.length];
+    for (int i = 0; i < args.length; ++i) {
+      final Class<?> clazz = args[i].getClass();
+      if (boxing && BOXING.containsKey(clazz)) {
+        classes[i] = BOXING.get(clazz);
+      } else {
+        classes[i] = clazz;
+      }
+    }
+    return classes;
   }
 
 }
