@@ -18,7 +18,7 @@ package com.lightydev.dk.concurrent;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +32,7 @@ public class CpuCoreExecutor extends ThreadPoolExecutor {
   private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
 
   public CpuCoreExecutor() {
-    this(new LinkedBlockingQueue<Runnable>(128));
+    this(new PriorityBlockingQueue<Runnable>(128));
   }
 
   public CpuCoreExecutor(BlockingQueue<Runnable> workQueue) {
@@ -41,6 +41,35 @@ public class CpuCoreExecutor extends ThreadPoolExecutor {
 
   public CpuCoreExecutor(BlockingQueue<Runnable> workQueue, ThreadFactory threadFactory) {
     super(CPU_COUNT + 1, CPU_COUNT * 2 + 1, 10, TimeUnit.SECONDS, workQueue, threadFactory);
+  }
+
+  @Override
+  public void execute(Runnable command) {
+    if (command instanceof Comparable) {
+      super.execute(command);
+    } else {
+      super.execute(new ComparableTask(command));
+    }
+  }
+
+  private static final class ComparableTask implements Runnable, Comparable<Runnable> {
+
+    private final Runnable mDelegate;
+
+    private ComparableTask(Runnable delegate) {
+      mDelegate = delegate;
+    }
+
+    @Override
+    public int compareTo(Runnable another) {
+      return 0;
+    }
+
+    @Override
+    public void run() {
+      mDelegate.run();
+    }
+
   }
 
 }

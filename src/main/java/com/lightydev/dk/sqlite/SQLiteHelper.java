@@ -35,12 +35,24 @@ class SQLiteHelper extends SQLiteOpenHelper {
 
   @Override
   public void onCreate(SQLiteDatabase db) {
-    mSchema.onCreate(db);
+    SQLiteDatabaseCompat.beginTransactionNonExclusive(db);
+    try {
+      mSchema.onCreate(db);
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    mSchema.onUpgrade(db, oldVersion, newVersion);
+    SQLiteDatabaseCompat.beginTransactionNonExclusive(db);
+    try {
+      mSchema.onUpgrade(db, oldVersion, newVersion);
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
   }
 
 }

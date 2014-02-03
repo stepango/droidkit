@@ -17,11 +17,15 @@
 package com.lightydev.dk.sqlite;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -29,7 +33,8 @@ import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import com.lightydev.dk.DroidKit;
-import com.lightydev.dk.log.Logger;
+
+import java.util.ArrayList;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
@@ -137,10 +142,51 @@ public abstract class SQLiteContentProvider extends ContentProvider {
     }
   }
 
+  @Override
+  public int bulkInsert(Uri uri, ContentValues[] bulkValues) {
+    switch (mUriMatcher.match(uri)) {
+      case SQLiteUriMatcher.MATCH_ALL:
+        final SQLiteDatabase db = mHelper.getWritableDatabase();
+        SQLiteDatabaseCompat.beginTransactionNonExclusive(db);
+        try {
+          final SQLiteTable table = mSchema.acquireTable(uri);
+          for (final ContentValues values : bulkValues) {
+            table.insert(db, values);
+          }
+          db.setTransactionSuccessful();
+        } finally {
+          db.endTransaction();
+        }
+        return notifyChangeIfNecessary(uri, bulkValues.length);
+      case SQLiteUriMatcher.MATCH_FTS:
+      case SQLiteUriMatcher.MATCH_ID:
+        throw new UnsupportedOperationException();
+      default:
+        throw new SQLiteException("unknown uri " + uri);
+    }
+  }
+
+  @Override
+  public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations)
+      throws OperationApplicationException {
+    final int numOperations = operations.size();
+    final ContentProviderResult[] results = new ContentProviderResult[numOperations];
+    final SQLiteDatabase db = mHelper.getWritableDatabase();
+    SQLiteDatabaseCompat.beginTransactionNonExclusive(db);
+    try {
+      for (int i = 0; i < numOperations; ++i) {
+        results[i] = operations.get(i).apply(this, results, i);
+      }
+      db.setTransactionSuccessful();
+    } finally {
+      db.endTransaction();
+    }
+    return results;
+  }
+
   protected abstract SQLiteSchema onCreateSchema();
 
   private Cursor withNotificationUri(Uri uri, Cursor c) {
-    Logger.debug("%s", SQLite.baseUri(uri));
     c.setNotificationUri(getContext().getContentResolver(), SQLite.baseUri(uri));
     return c;
   }
@@ -152,7 +198,6 @@ public abstract class SQLiteContentProvider extends ContentProvider {
   }
 
   private int notifyChangeIfNecessary(Uri uri, int affectedRows) {
-    Logger.debug("%s [%d]", uri, affectedRows);
     if (affectedRows > 0) {
       getContext().getContentResolver().notifyChange(uri, null);
     }

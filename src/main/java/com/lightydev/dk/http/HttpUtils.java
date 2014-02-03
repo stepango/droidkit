@@ -18,6 +18,9 @@ package com.lightydev.dk.http;
 
 import android.text.TextUtils;
 
+import com.lightydev.dk.digest.Hash;
+import com.lightydev.dk.digest.Hex;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -45,29 +49,11 @@ public final class HttpUtils {
   private HttpUtils() {
   }
 
-  static Map<String, String> readHeaders(HttpURLConnection cn) {
-    final Map<String, List<String>> cnHeaders = cn.getHeaderFields();
-    if (cnHeaders != null) {
-      final Map<String, String> headers = new HashMap<>(cnHeaders.size());
-      for (final Map.Entry<String, List<String>> cnHeader : cnHeaders.entrySet()) {
-        if (cnHeader.getKey() != null) {
-          headers.put(cnHeader.getKey(), TextUtils.join(",", cnHeader.getValue()));
-        }
-      }
-      return Collections.unmodifiableMap(headers);
-    }
-    return Collections.emptyMap();
-  }
-
-  static InputStream readContent(HttpURLConnection cn) {
+  public static String getUrlHash(String url) {
     try {
-      return cn.getInputStream();
-    } catch (IOException e) {
-      final InputStream error = cn.getErrorStream();
-      if (error != null) {
-        return error;
-      }
-      return new ByteArrayInputStream(new byte[0]);
+      return Hex.toHexString(Hash.sha1(url.getBytes()));
+    } catch (NoSuchAlgorithmException e) {
+      return Hex.toHexString(url.getBytes()).substring(0, 40);
     }
   }
 
@@ -100,6 +86,32 @@ public final class HttpUtils {
       dump.append("\n").append(header.getKey()).append(": ").append(header.getValue());
     }
     return dump.toString();
+  }
+
+  static Map<String, String> readHeaders(HttpURLConnection cn) {
+    final Map<String, List<String>> cnHeaders = cn.getHeaderFields();
+    if (cnHeaders != null) {
+      final Map<String, String> headers = new HashMap<>(cnHeaders.size());
+      for (final Map.Entry<String, List<String>> cnHeader : cnHeaders.entrySet()) {
+        if (cnHeader.getKey() != null) {
+          headers.put(cnHeader.getKey(), TextUtils.join(",", cnHeader.getValue()));
+        }
+      }
+      return Collections.unmodifiableMap(headers);
+    }
+    return Collections.emptyMap();
+  }
+
+  static InputStream readContent(HttpURLConnection cn) {
+    try {
+      return cn.getInputStream();
+    } catch (IOException e) {
+      final InputStream error = cn.getErrorStream();
+      if (error != null) {
+        return error;
+      }
+      return new ByteArrayInputStream(new byte[0]);
+    }
   }
 
 }

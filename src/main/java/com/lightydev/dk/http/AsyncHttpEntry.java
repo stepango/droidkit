@@ -28,6 +28,7 @@ import com.lightydev.dk.http.cookie.Cookie;
 import com.lightydev.dk.http.cookie.CookieStore;
 import com.lightydev.dk.log.Logger;
 import com.lightydev.dk.util.IOUtils;
+import com.lightydev.dk.util.Reflect;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -44,7 +46,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class AsyncHttpEntry implements Runnable {
+public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
 
   static final String GET = "GET";
 
@@ -69,6 +71,10 @@ public class AsyncHttpEntry implements Runnable {
   private final AtomicReference<RetryPolicy> mRetryPolicy = new AtomicReference<>(RetryPolicy.DEFAULT);
 
   private final AtomicInteger mRetry = new AtomicInteger();
+
+  private final AtomicInteger mPriority = new AtomicInteger();
+
+  private final AtomicBoolean mCanceled = new AtomicBoolean();
 
   private String mUrl;
 
@@ -116,26 +122,64 @@ public class AsyncHttpEntry implements Runnable {
     return this;
   }
 
+  public AsyncHttpEntry setPriority(int priority) {
+    mPriority.set(priority);
+    return this;
+  }
+
   public void send() {
+    mCanceled.set(false);
     Http.Engine.enqueue(this);
+  }
+
+  public void cancel() {
+    mCanceled.compareAndSet(false, true);
   }
 
   @Override
   public void run() {
-    final long start = SystemClock.uptimeMillis();
-    final int statusCode;
-    if (mCachePolicy.get().ignoreCache(mUrl)) {
-      statusCode = performNetworkRequest(null, -1);
-    } else {
-      if (Http.Engine.getCacheStore().contains(mUrl)) {
-        statusCode = performCacheRequest();
-      } else {
+    if (!mCanceled.get()) {
+      final long start = SystemClock.uptimeMillis();
+      final int statusCode;
+      if (mCachePolicy.get().ignoreCache(mUrl)) {
         statusCode = performNetworkRequest(null, -1);
+      } else {
+        if (Http.Engine.getCacheStore().contains(mUrl)) {
+          statusCode = performCacheRequest();
+        } else {
+          statusCode = performNetworkRequest(null, -1);
+        }
+      }
+      if (Http.Engine.isInDebugMode()) {
+        Logger.debug("%s [%s] in %d ms.", this, HttpStatus.getLine(statusCode), (SystemClock.uptimeMillis() - start));
       }
     }
-    if (Http.Engine.isInDebugMode()) {
-      Logger.debug("%s [%s] in %d ms.", this, HttpStatus.getLine(statusCode), (SystemClock.uptimeMillis() - start));
+  }
+
+  @Override
+  public int compareTo(AsyncHttpEntry another) {
+    if (this.mPriority.get() == another.mPriority.get()) {
+      return this.mSequence - another.mSequence;
     }
+    return another.mPriority.get() - this.mPriority.get();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!Reflect.classEquals(this, o)) return false;
+    final AsyncHttpEntry another = (AsyncHttpEntry) o;
+    return TextUtils.equals(mUrl, another.mUrl)
+        && TextUtils.equals(mMethod, another.mMethod)
+        && mSequence == another.mSequence;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = Reflect.hashCode(mMethod);
+    result = 31 * result + mSequence;
+    result = 31 * result + Reflect.hashCode(mUrl);
+    return result;
   }
 
   @Override

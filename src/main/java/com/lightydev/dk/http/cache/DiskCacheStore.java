@@ -18,9 +18,8 @@ package com.lightydev.dk.http.cache;
 
 import android.text.TextUtils;
 
-import com.lightydev.dk.digest.Hash;
-import com.lightydev.dk.digest.Hex;
 import com.lightydev.dk.http.HttpDate;
+import com.lightydev.dk.http.HttpUtils;
 import com.lightydev.dk.log.Logger;
 import com.lightydev.dk.util.IOUtils;
 
@@ -31,7 +30,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 /**
@@ -59,11 +57,7 @@ public class DiskCacheStore implements CacheStore {
   }
 
   private static String getFileName(String url) {
-    try {
-      return Hex.toHexString(Hash.sha1(url.getBytes()));
-    } catch (NoSuchAlgorithmException e) {
-      return Hex.toHexString(url.getBytes()).substring(0, 40);
-    }
+    return HttpUtils.getUrlHash(url);
   }
 
   @Override

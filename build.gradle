@@ -34,8 +34,8 @@ android {
   defaultConfig {
     minSdkVersion 9
     targetSdkVersion 19
-    versionCode 201
-    versionName "2.0.1"
+    versionCode 202
+    versionName "2.0.2"
   }
 
   compileOptions {
@@ -54,6 +54,7 @@ repositories {
 }
 
 dependencies {
+  compile 'com.android.support:support-v4:+'
 }
 
 apply plugin: 'android-checkstyle'
@@ -68,7 +69,7 @@ uploadArchives {
       repository(url: uri('../maven'))
       pom.groupId = 'com.lightydev'
       pom.artifactId = 'droidkit'
-      pom.version = '2.0.1'
+      pom.version = android.defaultConfig.versionName
     }
   }
 }
