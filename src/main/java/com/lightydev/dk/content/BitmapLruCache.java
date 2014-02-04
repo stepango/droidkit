@@ -16,30 +16,84 @@
 
 package com.lightydev.dk.content;
 
+import android.annotation.TargetApi;
 import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
+import android.os.Build;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class BitmapLruCache extends LruCache<String, Bitmap> {
+public class BitmapLruCache {
 
-  private BitmapLruCache() {
-    super((int) (Runtime.getRuntime().maxMemory() / 4));
+  private final LruCacheImpl mLruCache;
+
+  private BitmapLruCache(LruCacheImpl lruCache) {
+    mLruCache = lruCache;
   }
 
   public static BitmapLruCache getInstance() {
     return Holder.INSTANCE;
   }
 
-  @Override
-  protected int sizeOf(String url, Bitmap img) {
-    return img.getHeight() * img.getRowBytes();
+  public Bitmap get(String key) {
+    return mLruCache.get(key);
+  }
+
+  public Bitmap put(String key, Bitmap bitmap) {
+    return mLruCache.put(key, bitmap);
+  }
+
+  private static interface LruCacheImpl {
+
+    Bitmap put(String key, Bitmap value);
+
+    Bitmap get(String key);
+
   }
 
   private static final class Holder {
-    public static final BitmapLruCache INSTANCE = new BitmapLruCache();
+
+    private static final BitmapLruCache INSTANCE;
+
+    static {
+      final int maxSize = (int) (Runtime.getRuntime().maxMemory() / 4);
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+        INSTANCE = new BitmapLruCache(new LruCacheV12(maxSize));
+      } else {
+        INSTANCE = new BitmapLruCache(new LruCacheV4(maxSize));
+      }
+    }
+
+  }
+
+  private static final class LruCacheV4 extends android.support.v4.util.LruCache<String, Bitmap>
+      implements LruCacheImpl {
+
+    public LruCacheV4(int maxSize) {
+      super(maxSize);
+    }
+
+    @Override
+    protected int sizeOf(String url, Bitmap img) {
+      return img.getHeight() * img.getRowBytes();
+    }
+
+  }
+
+  @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+  private static final class LruCacheV12 extends android.util.LruCache<String, Bitmap>
+      implements LruCacheImpl {
+
+    public LruCacheV12(int maxSize) {
+      super(maxSize);
+    }
+
+    @Override
+    protected int sizeOf(String url, Bitmap img) {
+      return img.getByteCount();
+    }
+
   }
 
 }

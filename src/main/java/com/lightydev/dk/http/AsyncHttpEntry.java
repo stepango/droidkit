@@ -17,6 +17,7 @@
 package com.lightydev.dk.http;
 
 import android.net.Uri;
+import android.os.Process;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
@@ -138,6 +139,7 @@ public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
 
   @Override
   public void run() {
+    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
     if (!mCanceled.get()) {
       final long start = SystemClock.uptimeMillis();
       final int statusCode;
