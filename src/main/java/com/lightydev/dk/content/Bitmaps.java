@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lightydev.dk.util;
+package com.lightydev.dk.content;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

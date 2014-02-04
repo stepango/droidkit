@@ -26,12 +26,12 @@ import android.widget.ImageView;
 
 import com.lightydev.dk.R;
 import com.lightydev.dk.content.BitmapLruCache;
+import com.lightydev.dk.content.Bitmaps;
 import com.lightydev.dk.http.AsyncHttpEntry;
 import com.lightydev.dk.http.Http;
 import com.lightydev.dk.http.HttpException;
 import com.lightydev.dk.http.HttpUtils;
 import com.lightydev.dk.http.callback.AsyncHttpCallback;
-import com.lightydev.dk.util.Bitmaps;
 import com.lightydev.dk.util.IOUtils;
 
 import java.io.File;
@@ -98,6 +98,11 @@ public class RemoteImageView extends ImageView {
   }
 
   private final class LoadImageFromFileTask extends AsyncTask<String, Void, Bitmap> {
+
+    @Override
+    protected void onPreExecute() {
+      setImageResource(mPlaceholderResId);
+    }
 
     @Override
     protected Bitmap doInBackground(String... params) {

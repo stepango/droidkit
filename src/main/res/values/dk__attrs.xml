@@ -2,8 +2,9 @@
 <resources>
 
   <declare-styleable name="RemoteImageView">
-    <attr name="placeholder" format="reference" />
-    <attr name="imageHwSize" format="dimension" />
+    <attr name="placeholder" format="reference"/>
+    <attr name="errorImage" format="reference"/>
+    <attr name="imageHwSize" format="dimension"/>
   </declare-styleable>
 
 </resources>
