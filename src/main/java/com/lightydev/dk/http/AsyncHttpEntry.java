@@ -168,8 +168,12 @@ public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!Reflect.classEquals(this, o)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!Reflect.classEquals(this, o)) {
+      return false;
+    }
     final AsyncHttpEntry another = (AsyncHttpEntry) o;
     return TextUtils.equals(mUrl, another.mUrl)
         && TextUtils.equals(mMethod, another.mMethod)

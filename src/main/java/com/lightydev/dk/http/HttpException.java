@@ -57,6 +57,7 @@ public class HttpException extends IOException {
   private final int mType;
 
   public HttpException(int type) {
+    super();
     mType = type;
   }
 

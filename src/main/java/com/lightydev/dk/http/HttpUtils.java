@@ -83,7 +83,7 @@ public final class HttpUtils {
   public static String dumpHeaders(String url, Map<String, String> headers) {
     final StringBuilder dump = new StringBuilder(url).append("\n>>>>>");
     for (final Map.Entry<String, String> header : headers.entrySet()) {
-      dump.append("\n").append(header.getKey()).append(": ").append(header.getValue());
+      dump.append('\n').append(header.getKey()).append(": ").append(header.getValue());
     }
     return dump.toString();
   }

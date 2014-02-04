@@ -80,7 +80,7 @@ public final class SQLite {
         if (first) {
           first = false;
         } else {
-          where.append(" ").append(operand).append(" ");
+          where.append(' ').append(operand).append(' ');
         }
         where.append(condition);
       }

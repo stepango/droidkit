@@ -24,11 +24,11 @@ import android.os.Build;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class BitmapLruCache {
+public final class BitmapLruCache {
 
   private final LruCacheImpl mLruCache;
 
-  private BitmapLruCache(LruCacheImpl lruCache) {
+  BitmapLruCache(LruCacheImpl lruCache) {
     mLruCache = lruCache;
   }
 
@@ -44,7 +44,7 @@ public class BitmapLruCache {
     return mLruCache.put(key, bitmap);
   }
 
-  private static interface LruCacheImpl {
+  private interface LruCacheImpl {
 
     Bitmap put(String key, Bitmap value);
 

@@ -1,44 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ruleset name="ruleset" xmlns="http://pmd.sf.net/ruleset/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
-    xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
-  <rule ref="rulesets/java/basic.xml" />
+         xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd">
+  <rule ref="rulesets/java/basic.xml"/>
   <rule ref="rulesets/java/design.xml">
-    <exclude name="AvoidReassigningParameters" />
-    <exclude name="EmptyMethodInAbstractClassShouldBeAbstract" />
-    <exclude name="AvoidConstantsInterface" />
-    <exclude name="UncommentedEmptyMethod" />
-    <exclude name="FieldDeclarationsShouldBeAtStartOfClass" />
-    <exclude name="CompareObjectsWithEquals" />
-    <exclude name="ConfusingTernary" />
-    <exclude name="UseConcurrentHashMap" />
-    <exclude name="UseLocaleWithCaseConversions" />
-    <exclude name="SimpleDateFormatNeedsLocale" />
-    <exclude name="MissingBreakInSwitch" />
+    <exclude name="AvoidReassigningParameters"/>
+    <exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+    <exclude name="AvoidConstantsInterface"/>
+    <exclude name="UncommentedEmptyMethod"/>
+    <exclude name="FieldDeclarationsShouldBeAtStartOfClass"/>
+    <exclude name="CompareObjectsWithEquals"/>
+    <exclude name="ConfusingTernary"/>
+    <exclude name="UseConcurrentHashMap"/>
+    <exclude name="UseLocaleWithCaseConversions"/>
+    <exclude name="SimpleDateFormatNeedsLocale"/>
+    <exclude name="MissingBreakInSwitch"/>
   </rule>
   <rule ref="rulesets/java/typeresolution.xml">
-    <exclude name="LooseCoupling" />
+    <exclude name="LooseCoupling"/>
   </rule>
-  <rule ref="rulesets/java/strings.xml" />
-  <rule ref="rulesets/java/strictexception.xml" />
+  <rule ref="rulesets/java/strings.xml"/>
+  <rule ref="rulesets/java/strictexception.xml"/>
   <rule ref="rulesets/java/optimizations.xml">
-    <exclude name="MethodArgumentCouldBeFinal" />
-    <exclude name="LocalVariableCouldBeFinal" />
+    <exclude name="MethodArgumentCouldBeFinal"/>
+    <exclude name="LocalVariableCouldBeFinal"/>
   </rule>
-  <rule ref="rulesets/java/imports.xml" />
+  <rule ref="rulesets/java/imports.xml"/>
   <rule ref="rulesets/java/controversial.xml">
-    <exclude name="DataflowAnomalyAnalysis" />
-    <exclude name="OnlyOneReturn" />
-    <exclude name="AtLeastOneConstructor" />
-    <exclude name="UseConcurrentHashMap" />
-    <exclude name="AvoidLiteralsInIfCondition" />
-    <exclude name="OneDeclarationPerLine" />
-    <exclude name="DefaultPackage" />
+    <exclude name="DataflowAnomalyAnalysis"/>
+    <exclude name="OnlyOneReturn"/>
+    <exclude name="AtLeastOneConstructor"/>
+    <exclude name="UseConcurrentHashMap"/>
+    <exclude name="AvoidLiteralsInIfCondition"/>
+    <exclude name="OneDeclarationPerLine"/>
+    <exclude name="DefaultPackage"/>
+    <exclude name="AvoidUsingShortType"/>
+    <exclude name="AvoidFinalLocalVariable"/>
+    <exclude name="AssignmentInOperand"/>
   </rule>
   <rule ref="rulesets/java/android.xml">
-    <exclude name="ProtectLogV" />
-    <exclude name="ProtectLogD" />
-    <exclude name="ProtectLogI" />
-    <exclude name="ProtectLogE" />
+    <exclude name="ProtectLogV"/>
+    <exclude name="ProtectLogD"/>
+    <exclude name="ProtectLogI"/>
+    <exclude name="ProtectLogE"/>
   </rule>
 </ruleset>

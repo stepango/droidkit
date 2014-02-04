@@ -78,7 +78,7 @@ public final class Reflect {
     try {
       return method.invoke(object, args);
     } catch (IllegalAccessException | InvocationTargetException e) {
-      throw new RuntimeException(e);
+      throw new UnsupportedOperationException(e);
     }
   }
 

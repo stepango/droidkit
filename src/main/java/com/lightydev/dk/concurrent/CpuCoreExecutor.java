@@ -56,7 +56,7 @@ public class CpuCoreExecutor extends ThreadPoolExecutor {
 
     private final Runnable mDelegate;
 
-    private ComparableTask(Runnable delegate) {
+    ComparableTask(Runnable delegate) {
       mDelegate = delegate;
     }
 

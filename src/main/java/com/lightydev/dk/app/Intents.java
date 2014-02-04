@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lightydev.dk.util;
+package com.lightydev.dk.app;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,11 +28,14 @@ import java.io.File;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class Intents {
+public final class Intents {
 
   public static final String PLAY_STORE_APPS = "apps";
 
   private static final String HTTP_SCHEMA = "http://";
+
+  private Intents() {
+  }
 
   public static Intent openLink(String url) {
     if (!TextUtils.isEmpty(url) && !url.contains("://")) {
@@ -77,7 +80,7 @@ public class Intents {
   }
 
   public static Intent sendSms(String to, String message) {
-    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + to));
+    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:" + to));
     intent.putExtra("address", to);
     intent.putExtra("sms_body", message);
     intent.setType("vnd.android-dir/mms-sms");

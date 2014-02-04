@@ -64,7 +64,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
       mHelper = new SQLiteHelper(getContext(), mSchema);
       return true;
     } catch (PackageManager.NameNotFoundException e) {
-      throw new SQLiteException(e.getMessage());
+      throw new SQLiteException(e.getMessage(), e);
     }
   }
 
