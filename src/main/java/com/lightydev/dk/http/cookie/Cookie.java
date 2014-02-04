@@ -80,7 +80,19 @@ public class Cookie implements Comparable<Cookie> {
   }
 
   public boolean isExpired(long time) {
-    return mNativeCookie.hasExpired() && (mLastModified + mNativeCookie.getMaxAge()) < time;
+    return mNativeCookie.hasExpired() && (mLastModified + getMaxAge()) < time;
+  }
+
+  public long getLastModified() {
+    return mLastModified;
+  }
+
+  public void setMaxAge(long maxAge) {
+    mNativeCookie.setMaxAge(maxAge);
+  }
+
+  public long getMaxAge() {
+    return mNativeCookie.getMaxAge();
   }
 
   public String getPath() {

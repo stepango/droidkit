@@ -46,6 +46,8 @@ public class SQLiteTableEditor {
 
   private final List<SQLiteColumn> mColumns = new ArrayList<>();
 
+  private final List<SQLiteUniqueKey> mUniqueKeys = new ArrayList<>();
+
   private final List<SQLiteIndex> mIndexes = new ArrayList<>();
 
   private final List<SQLiteTrigger> mTriggers = new ArrayList<>();
@@ -70,6 +72,11 @@ public class SQLiteTableEditor {
 
   public SQLiteTableEditor addTrigger(SQLiteTrigger trigger) {
     mTriggers.add(trigger);
+    return this;
+  }
+
+  public SQLiteTableEditor addUniqueKey(SQLiteUniqueKey uniqueKey) {
+    mUniqueKeys.add(uniqueKey);
     return this;
   }
 
@@ -107,7 +114,7 @@ public class SQLiteTableEditor {
   }
 
   protected List<Object> getFixedDefinition() {
-    final List<Object> definition = new ArrayList<>(mColumns.size() + 1);
+    final List<Object> definition = new ArrayList<>(mColumns.size() + 1 + mUniqueKeys.size());
     boolean hasRowid = false;
     for (final SQLiteColumn column : mColumns) {
       if (column.isRowId()) {
@@ -119,6 +126,7 @@ public class SQLiteTableEditor {
     if (!hasRowid) {
       definition.add(new SQLiteColumn(BaseColumns._ID).rowid());
     }
+    definition.addAll(mUniqueKeys);
     return definition;
   }
 

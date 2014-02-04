@@ -49,6 +49,7 @@ public class MemoryCookieStore implements CookieStore {
     final Set<Cookie> cookieJar = obtainCookieJar(uri.getHost());
     for (final Cookie cookie : cookies) {
       if (mPolicy.shouldAccept(uri, cookie)) {
+        cookie.setLastModified(System.currentTimeMillis());
         cookieJar.add(cookie);
       }
     }
