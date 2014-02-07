@@ -73,7 +73,7 @@ public abstract class HttpCursorLoader extends CursorLoader {
 
   @Override
   protected void onForceLoad() {
-    if (mUpdate.get()) {
+    if (mUpdate.compareAndSet(true, false)) {
       mHttpRequest.set(newRequest().setCallback(mHttpCallback));
       mHttpRequest.get().send();
     }
