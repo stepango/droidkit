@@ -52,7 +52,18 @@ public class RemoteImageView extends ImageView {
 
   private final int mPlaceholderResId;
 
+  private final int mErrorResId;
+
+  private final Runnable mSetErrorImageCmd = new Runnable() {
+    @Override
+    public void run() {
+      setImageResource(mErrorResId);
+    }
+  };
+
   private final int mHwSize;
+
+  private final boolean mUseOptimalSize;
 
   private final AtomicReference<AsyncHttpEntry> mLoadImageRequest = new AtomicReference<>();
 
@@ -68,7 +79,9 @@ public class RemoteImageView extends ImageView {
     super(context, attrs);
     final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RemoteImageView);
     mPlaceholderResId = a.getResourceId(R.styleable.RemoteImageView_placeholder, 0);
+    mErrorResId = a.getResourceId(R.styleable.RemoteImageView_errorImage, 0);
     mHwSize = a.getDimensionPixelSize(R.styleable.RemoteImageView_imageHwSize, 0);
+    mUseOptimalSize = a.getBoolean(R.styleable.RemoteImageView_optimalSize, true);
     a.recycle();
     if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
       mCacheDir = context.getExternalCacheDir();
@@ -97,6 +110,22 @@ public class RemoteImageView extends ImageView {
     }
   }
 
+  private int getOptimalWidth() {
+    final int width = Math.max(getWidth(), mHwSize);
+    if (width > 0 || !mUseOptimalSize) {
+      return width;
+    }
+    return getResources().getDisplayMetrics().widthPixels;
+  }
+
+  private int getOptimalHeight() {
+    final int height = Math.max(getHeight(), mHwSize);
+    if (height > 0 || !mUseOptimalSize) {
+      return height;
+    }
+    return getResources().getDisplayMetrics().heightPixels;
+  }
+
   private final class LoadImageFromFileTask extends AsyncTask<String, Void, Bitmap> {
 
     @Override
@@ -107,7 +136,7 @@ public class RemoteImageView extends ImageView {
     @Override
     protected Bitmap doInBackground(String... params) {
       final File cacheFile = new File(mCacheDir, params[1]);
-      final Bitmap image = Bitmaps.decodeFile(cacheFile.getAbsolutePath(), mHwSize, mHwSize);
+      final Bitmap image = Bitmaps.decodeFile(cacheFile.getAbsolutePath(), getOptimalWidth(), getOptimalHeight());
       if (image != null) {
         BitmapLruCache.getInstance().put(params[1], image);
       } else {
@@ -146,7 +175,7 @@ public class RemoteImageView extends ImageView {
     public void onSuccess(int statusCode, Map<String, String> headers, InputStream content) {
       final File imageFile = new File(mCacheDir, mImageKey);
       if (imageFile.exists()) {
-        final Bitmap image = Bitmaps.decodeFile(imageFile.getAbsolutePath(), mHwSize, mHwSize);
+        final Bitmap image = Bitmaps.decodeFile(imageFile.getAbsolutePath(), getOptimalWidth(), getOptimalHeight());
         if (image != null) {
           BitmapLruCache.getInstance().put(mImageKey, image);
           post(mSetBitmapCmd);
@@ -158,7 +187,7 @@ public class RemoteImageView extends ImageView {
             IOUtils.copy(content, tmpStream);
           } finally {
             IOUtils.closeQuietly(tmpStream);
-            final Bitmap image = Bitmaps.decodeFile(imageFile.getAbsolutePath(), mHwSize, mHwSize);
+            final Bitmap image = Bitmaps.decodeFile(imageFile.getAbsolutePath(), getOptimalWidth(), getOptimalHeight());
             if (image != null) {
               BitmapLruCache.getInstance().put(mImageKey, image);
               post(mSetBitmapCmd);
@@ -172,7 +201,7 @@ public class RemoteImageView extends ImageView {
 
     @Override
     public void onError(HttpException e) {
-
+      post(mSetErrorImageCmd);
     }
 
   }

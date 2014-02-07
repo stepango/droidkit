@@ -59,7 +59,7 @@ public abstract class HttpCursorLoader extends CursorLoader {
 
   @Override
   public Cursor loadInBackground() {
-    if (waitForRequest() && mUpdate.compareAndSet(true, false)) {
+    if (mUpdate.compareAndSet(true, false) && waitForRequest()) {
       synchronized (mWaitLock) {
         try {
           mWaitLock.wait();

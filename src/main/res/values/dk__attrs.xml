@@ -5,6 +5,7 @@
     <attr name="placeholder" format="reference"/>
     <attr name="errorImage" format="reference"/>
     <attr name="imageHwSize" format="dimension"/>
+    <attr name="optimalSize" format="boolean"/>
   </declare-styleable>
 
 </resources>
