@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Daniel Serdyukov
+ * Copyright 2012-2014 Daniel Serdyukov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
