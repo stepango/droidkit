@@ -41,7 +41,7 @@ public class SQLiteSchema {
   }
 
   public SQLiteSchema addTable(SQLiteTable table) {
-    mSchema.put(table.getName(), table);
+    mSchema.put(table.getTableName(), table);
     return this;
   }
 

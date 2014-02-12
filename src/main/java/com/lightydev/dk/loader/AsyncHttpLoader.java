@@ -25,7 +25,6 @@ import android.os.Handler;
 import com.lightydev.dk.http.AsyncHttpEntry;
 import com.lightydev.dk.http.HttpException;
 import com.lightydev.dk.http.callback.AsyncHttpCallback;
-import com.lightydev.dk.log.Logger;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -68,7 +67,6 @@ public abstract class AsyncHttpLoader<D> extends Loader<D> {
 
   @Override
   public void deliverResult(D data) {
-    Logger.debug("%s", data);
     if (isReset()) {
       mResult.set(null);
     } else if (isStarted()) {

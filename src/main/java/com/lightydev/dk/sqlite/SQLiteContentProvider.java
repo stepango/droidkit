@@ -92,9 +92,9 @@ public abstract class SQLiteContentProvider extends ContentProvider {
     switch (mUriMatcher.match(uri)) {
       case SQLiteUriMatcher.MATCH_ALL:
       case SQLiteUriMatcher.MATCH_FTS:
-        return MIME_DIR + mSchema.acquireTable(uri).getName();
+        return MIME_DIR + mSchema.acquireTable(uri).getTableName();
       case SQLiteUriMatcher.MATCH_ID:
-        return MIME_ITEM + mSchema.acquireTable(uri).getName();
+        return MIME_ITEM + mSchema.acquireTable(uri).getTableName();
       default:
         throw new SQLiteException("unknown uri " + uri);
     }

@@ -45,19 +45,38 @@ public class DiskCacheStore implements CacheStore {
 
   private final File mCacheDir;
 
+  private final CachePolicy mCachePolicy;
+
   private final boolean mDebugMode;
 
   public DiskCacheStore(File cacheDir) {
-    this(cacheDir, false);
+    this(cacheDir, CachePolicy.DEFAULT);
   }
 
   public DiskCacheStore(File cacheDir, boolean debugMode) {
+    this(cacheDir, CachePolicy.DEFAULT, debugMode);
+  }
+
+  public DiskCacheStore(File cacheDir, CachePolicy policy) {
+    this(cacheDir, policy, false);
+  }
+
+  public DiskCacheStore(File cacheDir, CachePolicy policy, boolean debugMode) {
     mCacheDir = cacheDir;
+    mCachePolicy = policy;
     mDebugMode = debugMode;
+    if (!mCacheDir.exists()) {
+      mCacheDir.mkdirs();
+    }
   }
 
   private static String getFileName(String url) {
     return HttpUtils.getUrlHash(url);
+  }
+
+  @Override
+  public CachePolicy getPolicy() {
+    return mCachePolicy;
   }
 
   @Override
@@ -121,6 +140,14 @@ public class DiskCacheStore implements CacheStore {
       }
     }
     return get(url);
+  }
+
+  @Override
+  public boolean clear() {
+    for (final File file : mCacheDir.listFiles()) {
+      file.delete();
+    }
+    return mCacheDir.delete();
   }
 
   private void saveMetaFile(File metaFile, Map<String, String> headers) throws IOException {

@@ -25,20 +25,20 @@ import java.util.List;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
+ * @version 1.1
  */
 public abstract class SQLiteTable {
 
   private static final String WHERE_ID_EQUALS = BaseColumns._ID + "=?";
 
-  public abstract String getName();
+  public abstract String getTableName();
 
   protected Cursor select(SQLiteDatabase db, String[] columns, String where, String[] whereArgs, String orderBy) {
-    return db.query(getName(), columns, where, whereArgs, null, null, orderBy);
+    return db.query(getTableName(), columns, where, whereArgs, null, null, orderBy);
   }
 
   protected long insert(SQLiteDatabase db, ContentValues values) {
-    return db.insert(getName(), BaseColumns._ID, values);
+    return db.insert(getTableName(), BaseColumns._ID, values);
   }
 
   long insertById(SQLiteDatabase db, ContentValues values, String id) {
@@ -46,11 +46,11 @@ public abstract class SQLiteTable {
       return Long.parseLong(id);
     }
     values.put(BaseColumns._ID, id);
-    return db.insert(getName(), BaseColumns._ID, values);
+    return db.insert(getTableName(), BaseColumns._ID, values);
   }
 
   protected int delete(SQLiteDatabase db, String where, String[] whereArgs) {
-    return db.delete(getName(), where, whereArgs);
+    return db.delete(getTableName(), where, whereArgs);
   }
 
   int deleteById(SQLiteDatabase db, String id) {
@@ -58,7 +58,7 @@ public abstract class SQLiteTable {
   }
 
   protected int update(SQLiteDatabase db, ContentValues values, String where, String[] whereArgs) {
-    return db.update(getName(), values, where, whereArgs);
+    return db.update(getTableName(), values, where, whereArgs);
   }
 
   int updateById(SQLiteDatabase db, ContentValues values, String id) {
@@ -71,7 +71,7 @@ public abstract class SQLiteTable {
   }
 
   protected final String getFtsTableName() {
-    return SQLite.withFtsSfx(getName());
+    return SQLite.withFtsSfx(getTableName());
   }
 
   protected List<String> getFtsColumns() {

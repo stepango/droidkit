@@ -66,7 +66,7 @@ public class SQLiteTableEditor {
   }
 
   public SQLiteTableEditor addIndex(SQLiteIndex index) {
-    mIndexes.add(index.on(mTable.getName(), ++mIndexSequence));
+    mIndexes.add(index.on(mTable.getTableName(), ++mIndexSequence));
     return this;
   }
 
@@ -96,7 +96,7 @@ public class SQLiteTableEditor {
   }
 
   public void create(SQLiteDatabase db) {
-    db.execSQL("CREATE TABLE IF NOT EXISTS " + mTable.getName() +
+    db.execSQL("CREATE TABLE IF NOT EXISTS " + mTable.getTableName() +
         "(" + TextUtils.join(", ", getFixedDefinition()) + ");");
     if (!mVirtualTable.isEmpty()) {
       db.execSQL(TextUtils.join(" ", mVirtualTable));
@@ -110,7 +110,7 @@ public class SQLiteTableEditor {
   }
 
   public void drop(SQLiteDatabase db) {
-    Logger.debug("DROP TABLE IF EXISTS " + mTable.getName() + ";");
+    Logger.debug("DROP TABLE IF EXISTS " + mTable.getTableName() + ";");
   }
 
   protected List<Object> getFixedDefinition() {
@@ -142,7 +142,7 @@ public class SQLiteTableEditor {
 
   private void initInsertTriggers(String table, List<String> ftsColumns) {
     addTrigger(new SQLiteTrigger(table + "_insert")
-        .after().insert().on(mTable.getName())
+        .after().insert().on(mTable.getTableName())
         .begin()
         .query("DELETE FROM " + table + " WHERE docid=last_insert_rowid();")
         .query("INSERT INTO " + table + "(docid, " + TextUtils.join(", ", ftsColumns) + ")" +
@@ -153,7 +153,7 @@ public class SQLiteTableEditor {
   private void initUpdateTriggers(String table, List<String> ftsColumns) {
     for (final String column : ftsColumns) {
       addTrigger(new SQLiteTrigger(table + "_" + column + "_update")
-          .updateOf(column).on(mTable.getName())
+          .updateOf(column).on(mTable.getTableName())
           .begin()
           .query("UPDATE " + table + " SET " + column + "=NEW." + column + " WHERE docid=OLD." + BaseColumns._ID + ";")
           .end());
@@ -163,7 +163,7 @@ public class SQLiteTableEditor {
   @SuppressWarnings("unused")
   private void initDeleteTriggers(String table, List<String> ftsColumns) {
     addTrigger(new SQLiteTrigger(table + "_delete")
-        .after().delete().on(mTable.getName())
+        .after().delete().on(mTable.getTableName())
         .begin()
         .query("DELETE FROM " + table + " WHERE docid=OLD." + BaseColumns._ID + ";")
         .end());

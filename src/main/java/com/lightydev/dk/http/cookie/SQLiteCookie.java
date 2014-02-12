@@ -31,9 +31,15 @@ import java.util.List;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
+ * @version 1.1
  */
 public class SQLiteCookie extends SQLiteTable {
+
+  private final String mTableName;
+
+  public SQLiteCookie(String tableName) {
+    mTableName = tableName;
+  }
 
   public static ContentValues toContentValues(String host, Cookie cookie) {
     final ContentValues values = new ContentValues();
@@ -60,8 +66,8 @@ public class SQLiteCookie extends SQLiteTable {
   }
 
   @Override
-  public String getName() {
-    return "http_cookies";
+  public String getTableName() {
+    return mTableName;
   }
 
   @Override

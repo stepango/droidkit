@@ -16,7 +16,6 @@
 
 package com.lightydev.dk.http.cache;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -24,32 +23,36 @@ import java.util.Map;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public interface CacheStore {
+public class NoCacheStore implements CacheStore {
 
-  CacheStore NO_CACHE = new NoCacheStore();
+  @Override
+  public CachePolicy getPolicy() {
+    return CachePolicy.NO_CACHE;
+  }
 
-  CachePolicy getPolicy();
+  @Override
+  public boolean contains(String url) {
+    return false;
+  }
 
-  boolean contains(String url);
+  @Override
+  public Entry get(String url) {
+    return null;
+  }
 
-  Entry get(String url);
+  @Override
+  public Entry put(String url, Map<String, String> headers, InputStream content) {
+    return null;
+  }
 
-  Entry put(String url, Map<String, String> headers, InputStream content);
+  @Override
+  public Entry update(String url, Map<String, String> headers) {
+    return null;
+  }
 
-  Entry update(String url, Map<String, String> headers);
-
-  boolean clear();
-
-  interface Entry {
-
-    boolean isExpired();
-
-    InputStream getContent() throws IOException;
-
-    String getETag();
-
-    long getLastModified();
-
+  @Override
+  public boolean clear() {
+    return true;
   }
 
 }

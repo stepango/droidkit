@@ -34,6 +34,7 @@ import com.lightydev.dk.util.Reflect;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +46,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
+ * @version 1.2
  */
 public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
 
@@ -86,16 +87,19 @@ public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
   }
 
   public AsyncHttpEntry setBody(HttpBody body) {
-    if (TextUtils.equals(mMethod, GET) || TextUtils.equals(mMethod, DELETE)) {
-      if (mUrl.contains(HttpBody.QUERY_SEPARATOR)) {
-        mUrl += (HttpBody.PARAMETER_SEPARATOR + body);
-      } else {
-        mUrl += (HttpBody.QUERY_SEPARATOR + body);
-      }
-    } else {
-      mHttpBody.set(body);
+    switch (mMethod) {
+      case GET:
+        appendBodyToUrl(body);
+        return this;
+      case DELETE:
+        appendBodyToUrl(body);
+        setCachePolicy(CachePolicy.NO_CACHE);
+        return this;
+      default:
+        mHttpBody.set(body);
+        setCachePolicy(CachePolicy.NO_CACHE);
+        return this;
     }
-    return this;
   }
 
   public AsyncHttpEntry setCallback(AsyncHttpCallback cb) {
@@ -193,8 +197,16 @@ public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
     return "#" + mSequence + " " + mMethod + " " + mUrl;
   }
 
+  private void appendBodyToUrl(HttpBody body) {
+    if (mUrl.contains(HttpBody.QUERY_SEPARATOR)) {
+      mUrl += (HttpBody.PARAMETER_SEPARATOR + body);
+    } else {
+      mUrl += (HttpBody.QUERY_SEPARATOR + body);
+    }
+  }
+
   private HttpURLConnection openConnection(String url) throws IOException {
-    final HttpURLConnection cn = (HttpURLConnection) new URL(url).openConnection();
+    final HttpURLConnection cn = (HttpURLConnection) new URL(URI.create(url).toASCIIString()).openConnection();
     cn.setRequestMethod(mMethod);
     return cn;
   }
@@ -264,11 +276,14 @@ public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
 
   private int onSuccess(int statusCode, Map<String, String> headers, InputStream content) {
     Http.Engine.getCookieStore().add(Uri.parse(mUrl), Cookie.parse(headers.get(CookieStore.Header.SET_COOKIE)));
-    if (mCachePolicy.get().shouldCache(mUrl, headers)) {
+    final CachePolicy cacheStorePolicy = Http.Engine.getCacheStore().getPolicy();
+    if (cacheStorePolicy.shouldCache(mUrl, headers) && mCachePolicy.get().shouldCache(mUrl, headers)) {
       if (statusCode == HttpURLConnection.HTTP_OK) {
         onSuccessWithCacheSave(headers, content);
       } else if (statusCode == HttpURLConnection.HTTP_NOT_MODIFIED) {
         onSuccessWithCacheUpdate(headers);
+      } else {
+        onSuccessIfCallbackExists(statusCode, headers, content);
       }
     } else {
       onSuccessIfCallbackExists(statusCode, headers, content);

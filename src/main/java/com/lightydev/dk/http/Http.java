@@ -111,15 +111,23 @@ public final class Http {
       CACHE_STORE.set(cacheStore);
     }
 
+    public static void clearCacheStore() {
+      CACHE_STORE.get().clear();
+    }
+
     public static void setCookieStore(CookieStore cookieStore) {
       COOKIE_STORE.set(cookieStore);
+    }
+
+    public static void clearCookieStore() {
+      COOKIE_STORE.get().removeAll();
     }
 
     public static void setDebugMode(boolean debugMode) {
       DEBUG_MODE.set(debugMode);
     }
 
-    public static boolean isInDebugMode() {
+    static boolean isInDebugMode() {
       return DEBUG_MODE.get();
     }
 
