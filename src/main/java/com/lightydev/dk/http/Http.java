@@ -88,6 +88,9 @@ public final class Http {
 
     private static final AtomicBoolean DEBUG_MODE = new AtomicBoolean();
 
+    private Engine() {
+    }
+
     public static void start() {
       if (GUARD.getAndIncrement() == 0 && !QUEUE.isEmpty()) {
         DroidKit.EXECUTOR.execute(new Runnable() {

@@ -46,6 +46,8 @@ public abstract class SQLiteContentProvider extends ContentProvider {
 
   private static final String MIME_ITEM = "vnd.android.cursor.item/";
 
+  private static final String UNKNOWN_URI = "unknown uri ";
+
   private final SQLiteUriMatcher mUriMatcher = new SQLiteUriMatcher();
 
   private SQLiteSchema mSchema;
@@ -83,7 +85,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return withNotificationUri(uri, mSchema.acquireTable(uri)
             .fts(mHelper.getReadableDatabase(), uri.getLastPathSegment(), columns, where, whereArgs, orderBy));
       default:
-        throw new SQLiteException("unknown uri " + uri);
+        throw new SQLiteException(UNKNOWN_URI + uri);
     }
   }
 
@@ -96,7 +98,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
       case SQLiteUriMatcher.MATCH_ID:
         return MIME_ITEM + mSchema.acquireTable(uri).getTableName();
       default:
-        throw new SQLiteException("unknown uri " + uri);
+        throw new SQLiteException(UNKNOWN_URI + uri);
     }
   }
 
@@ -110,7 +112,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return withAppendedId(uri, mSchema.acquireTable(uri)
             .insertById(mHelper.getWritableDatabase(), values, uri.getLastPathSegment()));
       default:
-        throw new SQLiteException("unknown uri " + uri);
+        throw new SQLiteException(UNKNOWN_URI + uri);
     }
   }
 
@@ -124,7 +126,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return notifyChangeIfNecessary(uri, mSchema.acquireTable(uri)
             .deleteById(mHelper.getWritableDatabase(), uri.getLastPathSegment()));
       default:
-        throw new SQLiteException("unknown uri " + uri);
+        throw new SQLiteException(UNKNOWN_URI + uri);
     }
   }
 
@@ -138,7 +140,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return notifyChangeIfNecessary(uri, mSchema.acquireTable(uri)
             .updateById(mHelper.getWritableDatabase(), values, uri.getLastPathSegment()));
       default:
-        throw new SQLiteException("unknown uri " + uri);
+        throw new SQLiteException(UNKNOWN_URI + uri);
     }
   }
 
@@ -162,7 +164,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
       case SQLiteUriMatcher.MATCH_ID:
         throw new UnsupportedOperationException();
       default:
-        throw new SQLiteException("unknown uri " + uri);
+        throw new SQLiteException(UNKNOWN_URI + uri);
     }
   }
 

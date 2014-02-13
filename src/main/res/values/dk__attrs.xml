@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+  <declare-styleable name="Theme">
+    <attr name="shareMenuOverflowText" format="reference" />
+    <attr name="shareMenuOverflowIcon" format="reference" />
+    <attr name="shareMenuExpandedCount" format="integer" />
+    <attr name="shareMenuMaxCount" format="integer" />
+  </declare-styleable>
+
   <declare-styleable name="RemoteImageView">
-    <attr name="placeholder" format="reference"/>
-    <attr name="errorImage" format="reference"/>
-    <attr name="imageHwSize" format="dimension"/>
-    <attr name="optimalSize" format="boolean"/>
+    <attr name="placeholder" format="reference" />
+    <attr name="errorImage" format="reference" />
+    <attr name="imageHwSize" format="dimension" />
+    <attr name="optimalSize" format="boolean" />
   </declare-styleable>
 
 </resources>

@@ -17,14 +17,13 @@
 package com.lightydev.dk.view;
 
 import android.database.Cursor;
-import android.view.View;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public interface ViewCursorBinder {
+public interface CursorBinder {
 
-  void bindCursor(View view, Cursor cursor);
+  void bindCursor(Cursor cursor);
 
 }

@@ -38,6 +38,7 @@ public class SQLiteCookie extends SQLiteTable {
   private final String mTableName;
 
   public SQLiteCookie(String tableName) {
+    super();
     mTableName = tableName;
   }
 
