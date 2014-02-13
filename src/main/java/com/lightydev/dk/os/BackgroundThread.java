@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class BackgroundThread extends HandlerThread {
+public final class BackgroundThread extends HandlerThread {
 
   private static final AtomicReference<Handler> HANDLER = new AtomicReference<>();
 
