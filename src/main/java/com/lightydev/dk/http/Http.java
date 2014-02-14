@@ -21,8 +21,8 @@ import com.lightydev.dk.http.cache.CacheStore;
 import com.lightydev.dk.http.cookie.CookieStore;
 import com.lightydev.dk.log.Logger;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,7 +37,7 @@ public final class Http {
 
   private static final AtomicInteger GUARD = new AtomicInteger();
 
-  private static final BlockingQueue<Runnable> QUEUE = new LinkedBlockingQueue<>(128);
+  private static final Queue<Runnable> REQUEST_CACHE = new ConcurrentLinkedQueue<>();
 
   private static final AtomicReference<CacheStore> CACHE_STORE = new AtomicReference<>(CacheStore.NO_CACHE);
 
@@ -92,12 +92,12 @@ public final class Http {
     }
 
     public static void start() {
-      if (GUARD.getAndIncrement() == 0 && !QUEUE.isEmpty()) {
+      if (GUARD.getAndIncrement() == 0 && !REQUEST_CACHE.isEmpty()) {
         DroidKit.EXECUTOR.execute(new Runnable() {
           @Override
           public void run() {
-            while (!QUEUE.isEmpty()) {
-              enqueue(QUEUE.poll());
+            while (!REQUEST_CACHE.isEmpty()) {
+              enqueue(REQUEST_CACHE.poll());
             }
           }
         });
@@ -138,7 +138,7 @@ public final class Http {
       if (GUARD.get() > 0) {
         DroidKit.EXECUTOR.execute(entry);
       } else {
-        QUEUE.add(entry);
+        REQUEST_CACHE.offer(entry);
       }
     }
 

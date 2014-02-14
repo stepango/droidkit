@@ -16,7 +16,6 @@
 
 package com.lightydev.dk.widget;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -43,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class ShareActionProvider extends ActionProvider {
 
   private final Context mContext;
@@ -81,7 +80,6 @@ public class ShareActionProvider extends ActionProvider {
   }
 
   @Override
-  @SuppressLint("deprecation")
   @SuppressWarnings("deprecation")
   public View onCreateActionView() {
     return null;

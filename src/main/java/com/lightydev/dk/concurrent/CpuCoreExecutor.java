@@ -32,7 +32,7 @@ public class CpuCoreExecutor extends ThreadPoolExecutor {
   private static final int CPU_COUNT = Runtime.getRuntime().availableProcessors();
 
   public CpuCoreExecutor() {
-    this(new PriorityBlockingQueue<Runnable>(128));
+    this(new PriorityBlockingQueue<Runnable>(256));
   }
 
   public CpuCoreExecutor(BlockingQueue<Runnable> workQueue) {
