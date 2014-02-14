@@ -16,6 +16,7 @@
 
 package com.lightydev.dk.http;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.lightydev.dk.digest.Hash;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
@@ -54,6 +57,15 @@ public final class HttpUtils {
       return Hex.toHexString(Hash.sha1(url.getBytes()));
     } catch (NoSuchAlgorithmException e) {
       return Hex.toHexString(url.getBytes()).substring(0, 40);
+    }
+  }
+
+  public static String toAsciiUrl(String url) {
+    final Uri uri = Uri.parse(url);
+    try {
+      return new URI(uri.getScheme(), uri.getHost(), uri.getPath(), null).toASCIIString();
+    } catch (URISyntaxException e) {
+      return url;
     }
   }
 

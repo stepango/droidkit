@@ -16,6 +16,7 @@
 
 package com.lightydev.dk.widget;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -80,6 +81,8 @@ public class ShareActionProvider extends ActionProvider {
   }
 
   @Override
+  @SuppressLint("deprecation")
+  @SuppressWarnings("deprecation")
   public View onCreateActionView() {
     return null;
   }

@@ -34,7 +34,6 @@ import com.lightydev.dk.util.Reflect;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
@@ -206,7 +205,7 @@ public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
   }
 
   private HttpURLConnection openConnection(String url) throws IOException {
-    final HttpURLConnection cn = (HttpURLConnection) new URL(URI.create(url).toASCIIString()).openConnection();
+    final HttpURLConnection cn = (HttpURLConnection) new URL(HttpUtils.toAsciiUrl(url)).openConnection();
     cn.setRequestMethod(mMethod);
     return cn;
   }
