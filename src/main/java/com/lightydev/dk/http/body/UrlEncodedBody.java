@@ -18,7 +18,7 @@ package com.lightydev.dk.http.body;
 
 import com.lightydev.dk.http.Http;
 import com.lightydev.dk.http.HttpUtils;
-import com.lightydev.dk.util.IOUtils;
+import com.lightydev.dk.io.IOUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;

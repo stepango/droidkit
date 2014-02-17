@@ -8,8 +8,7 @@
     <attr name="shareMenuMaxCount" format="integer" />
   </declare-styleable>
 
-  <declare-styleable name="RemoteImageView">
-    <attr name="placeholder" format="reference" />
+  <declare-styleable name="DkImageView">
     <attr name="errorImage" format="reference" />
     <attr name="imageHwSize" format="dimension" />
     <attr name="optimalSize" format="boolean" />

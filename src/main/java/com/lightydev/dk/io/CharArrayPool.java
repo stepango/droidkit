@@ -14,35 +14,27 @@
  * limitations under the License.
  */
 
-package com.lightydev.dk.widget;
+package com.lightydev.dk.io;
 
-import android.content.Context;
-import android.net.Uri;
-import android.util.AttributeSet;
+import com.lightydev.dk.util.ArrayPool;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 2.0
- * @deprecated Use {@link com.lightydev.dk.widget.DkImageView} instead.
- * <p/>
- * Class was be removed in DroidKit v. 2.0.9
+ * @version 1.0
  */
-public class RemoteImageView extends DkImageView {
+public class CharArrayPool extends ArrayPool<char[]> {
 
-  public RemoteImageView(Context context) {
-    super(context);
+  public static CharArrayPool getInstance() {
+    return Holder.INSTANCE;
   }
 
-  public RemoteImageView(Context context, AttributeSet attrs) {
-    super(context, attrs);
+  @Override
+  protected char[] createEntry() {
+    return new char[IOUtils.BUFFER_SIZE];
   }
 
-  public RemoteImageView(Context context, AttributeSet attrs, int defStyle) {
-    super(context, attrs, defStyle);
-  }
-
-  public void loadImage(String url) {
-    super.loadImage(Uri.parse(url));
+  private static final class Holder {
+    public static final CharArrayPool INSTANCE = new CharArrayPool();
   }
 
 }

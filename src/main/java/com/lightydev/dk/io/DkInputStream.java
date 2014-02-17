@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package com.lightydev.dk.util;
+package com.lightydev.dk.io;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class ByteArrayPool extends ArrayPool<byte[]> {
+public class DkInputStream extends BufferedInputStream {
 
-  public static ByteArrayPool getInstance() {
-    return Holder.INSTANCE;
+  public DkInputStream(InputStream in) {
+    super(in, 1);
+    buf = ByteArrayPool.getInstance().obtain();
   }
 
   @Override
-  protected byte[] createEntry() {
-    return new byte[IOUtils.BUFFER_SIZE];
-  }
-
-  private static final class Holder {
-    public static final ByteArrayPool INSTANCE = new ByteArrayPool();
+  public void close() throws IOException {
+    ByteArrayPool.getInstance().free(buf);
+    super.close();
   }
 
 }

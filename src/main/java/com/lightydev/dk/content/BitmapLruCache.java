@@ -44,6 +44,11 @@ public final class BitmapLruCache {
     return mLruCache.put(key, bitmap);
   }
 
+  @Override
+  public String toString() {
+    return mLruCache.toString();
+  }
+
   private interface LruCacheImpl {
 
     Bitmap put(String key, Bitmap value);

@@ -21,7 +21,7 @@ import android.text.TextUtils;
 import com.lightydev.dk.http.HttpDate;
 import com.lightydev.dk.http.HttpUtils;
 import com.lightydev.dk.log.Logger;
-import com.lightydev.dk.util.IOUtils;
+import com.lightydev.dk.io.IOUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

@@ -25,6 +25,7 @@ import android.content.pm.ProviderInfo;
 import com.lightydev.dk.concurrent.CpuCoreExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
@@ -33,6 +34,8 @@ import java.util.concurrent.Executor;
 public final class DroidKit {
 
   public static final Executor EXECUTOR = new CpuCoreExecutor();
+
+  private static final AtomicBoolean DEBUG_MODE = new AtomicBoolean();
 
   private DroidKit() {
   }
@@ -44,5 +47,14 @@ public final class DroidKit {
         provider.getName()
     ), flags);
   }
+
+  public static void setDebugMode(boolean debugMode) {
+    DEBUG_MODE.set(debugMode);
+  }
+
+  public static boolean isInDebugMode() {
+    return DEBUG_MODE.get();
+  }
+
 
 }

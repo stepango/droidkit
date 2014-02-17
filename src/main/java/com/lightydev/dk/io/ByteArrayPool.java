@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package com.lightydev.dk.util;
+package com.lightydev.dk.io;
+
+import com.lightydev.dk.util.ArrayPool;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class CharArrayPool extends ArrayPool<char[]> {
+public class ByteArrayPool extends ArrayPool<byte[]> {
 
-  public static CharArrayPool getInstance() {
+  public static ByteArrayPool getInstance() {
     return Holder.INSTANCE;
   }
 
   @Override
-  protected char[] createEntry() {
-    return new char[IOUtils.BUFFER_SIZE];
+  protected byte[] createEntry() {
+    return new byte[IOUtils.BUFFER_SIZE];
   }
 
   private static final class Holder {
-    public static final CharArrayPool INSTANCE = new CharArrayPool();
+    public static final ByteArrayPool INSTANCE = new ByteArrayPool();
   }
 
 }

@@ -18,12 +18,22 @@ package com.lightydev.dk.content;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+
+import com.lightydev.dk.io.DkInputStream;
+import com.lightydev.dk.io.IOUtils;
+import com.lightydev.dk.log.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
+ * @version 1.1
  */
 public final class Bitmaps {
+
+  private static final int BITMAP_HEAD = 1024;
 
   private static final double LN_2 = Math.log(2);
 
@@ -31,24 +41,62 @@ public final class Bitmaps {
   }
 
   public static Bitmap decodeFile(String filePath, int width, int height) {
-    if (width > 0 || height > 0) {
+    return decodeFile(filePath, Math.max(width, height));
+  }
+
+  public static Bitmap decodeFile(String filePath, int hwSize) {
+    if (hwSize > 0) {
       final BitmapFactory.Options ops = new BitmapFactory.Options();
       ops.inJustDecodeBounds = true;
       BitmapFactory.decodeFile(filePath, ops);
-      ops.inSampleSize = calculateInSampleSize(ops, width, height);
+      ops.inSampleSize = calculateInSampleSize(ops, hwSize);
       ops.inJustDecodeBounds = false;
       return BitmapFactory.decodeFile(filePath, ops);
     }
     return BitmapFactory.decodeFile(filePath);
   }
 
-  private static int calculateInSampleSize(BitmapFactory.Options ops, int width, int height) {
+  public static Bitmap decodeStream(InputStream stream, int width, int height) {
+    return decodeStream(stream, null, Math.max(width, height));
+  }
+
+  public static Bitmap decodeStream(InputStream stream, Rect outPadding, int width, int height) {
+    return decodeStream(stream, outPadding, Math.max(width, height));
+  }
+
+  public static Bitmap decodeStream(InputStream stream, int hwSize) {
+    return decodeStream(stream, null, hwSize);
+  }
+
+  public static Bitmap decodeStream(InputStream stream, Rect outPadding, int hwSize) {
+    if (hwSize > 0) {
+      final InputStream localIn = new DkInputStream(stream);
+      try {
+        final BitmapFactory.Options ops = new BitmapFactory.Options();
+        ops.inJustDecodeBounds = true;
+        localIn.mark(BITMAP_HEAD);
+        BitmapFactory.decodeStream(localIn, outPadding, ops);
+        ops.inSampleSize = calculateInSampleSize(ops, hwSize);
+        ops.inJustDecodeBounds = false;
+        localIn.reset();
+        return BitmapFactory.decodeStream(localIn, outPadding, ops);
+      } catch (IOException e) {
+        Logger.error(e);
+      } finally {
+        IOUtils.closeQuietly(localIn);
+      }
+      return null;
+    }
+    return BitmapFactory.decodeStream(stream);
+  }
+
+  public static int calculateInSampleSize(BitmapFactory.Options ops, int hwSize) {
     final int outHeight = ops.outHeight;
     final int outWidth = ops.outWidth;
-    if (outHeight > height || outWidth > width) {
-      final double ratio = Math.min(
-          Math.round((double) outHeight / (double) height),
-          Math.round((double) outWidth / (double) width)
+    if (outWidth > hwSize || outHeight > hwSize) {
+      final double ratio = Math.max(
+          Math.round((double) outWidth / (double) hwSize),
+          Math.round((double) outHeight / (double) hwSize)
       );
       return ratio > 0 ? (int) Math.pow(2, Math.floor(Math.log(ratio) / LN_2)) : 1;
     }

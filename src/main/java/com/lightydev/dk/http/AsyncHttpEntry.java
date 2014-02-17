@@ -28,7 +28,7 @@ import com.lightydev.dk.http.callback.AsyncHttpCallback;
 import com.lightydev.dk.http.cookie.Cookie;
 import com.lightydev.dk.http.cookie.CookieStore;
 import com.lightydev.dk.log.Logger;
-import com.lightydev.dk.util.IOUtils;
+import com.lightydev.dk.io.IOUtils;
 import com.lightydev.dk.util.Reflect;
 
 import java.io.IOException;

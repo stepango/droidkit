@@ -43,22 +43,36 @@ public final class Http {
 
   private static final AtomicReference<CookieStore> COOKIE_STORE = new AtomicReference<>(CookieStore.MEMORY);
 
+  private static final String URL = "url";
+
   private Http() {
   }
 
   public static AsyncHttpEntry get(String url) {
+    if (url == null) {
+      throw new NullPointerException(URL);
+    }
     return new AsyncHttpEntry(AsyncHttpEntry.GET, url, SEQUENCE.incrementAndGet());
   }
 
   public static AsyncHttpEntry post(String url) {
+    if (url == null) {
+      throw new NullPointerException(URL);
+    }
     return new AsyncHttpEntry(AsyncHttpEntry.POST, url, SEQUENCE.incrementAndGet());
   }
 
   public static AsyncHttpEntry put(String url) {
+    if (url == null) {
+      throw new NullPointerException(URL);
+    }
     return new AsyncHttpEntry(AsyncHttpEntry.PUT, url, SEQUENCE.incrementAndGet());
   }
 
   public static AsyncHttpEntry delete(String url) {
+    if (url == null) {
+      throw new NullPointerException(URL);
+    }
     return new AsyncHttpEntry(AsyncHttpEntry.DELETE, url, SEQUENCE.incrementAndGet());
   }
 
