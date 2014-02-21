@@ -59,6 +59,9 @@ public final class ImageLoader {
 
   private static final Set<Uri> IMAGE_QUEUE = new ConcurrentSkipListSet<>();
 
+  private ImageLoader() {
+  }
+
   public static void loadImage(Uri uri) {
     loadImage(uri, -1);
   }

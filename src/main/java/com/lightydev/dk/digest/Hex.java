@@ -62,10 +62,8 @@ public final class Hex {
   }
 
   public static String byteToHexString(byte b, boolean upperCase) {
-    char[] digits = upperCase ? UPPER_CASE_DIGITS : DIGITS;
-    char[] buf = new char[2];
-    buf[0] = digits[(b >> 4) & 0xf];
-    buf[1] = digits[b & 0xf];
+    final char[] digits = upperCase ? UPPER_CASE_DIGITS : DIGITS;
+    final char[] buf = new char[]{digits[(b >> 4) & 0xf], digits[b & 0xf]};
     return new String(buf, 0, 2);
   }
 

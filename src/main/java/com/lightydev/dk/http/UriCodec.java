@@ -44,25 +44,21 @@ public abstract class UriCodec {
     appendEncoded(builder, s, UTF_8, true);
   }
 
-  private void appendEncoded(StringBuilder builder, String s, Charset charset, boolean isPartiallyEncoded) {
-    if (s == null) {
+  private void appendEncoded(StringBuilder builder, String string, Charset charset, boolean isPartiallyEncoded) {
+    if (string == null) {
       throw new NullPointerException("s == null");
     }
     int escapeStart = -1;
-    for (int i = 0; i < s.length(); i++) {
-      char c = s.charAt(i);
-      if ((c >= 'a' && c <= 'z')
-          || (c >= 'A' && c <= 'Z')
-          || (c >= '0' && c <= '9')
-          || isRetained(c)
-          || (c == '%' && isPartiallyEncoded)) {
+    for (int i = 0; i < string.length(); i++) {
+      final char c = string.charAt(i);
+      if (isValidChar(c, isPartiallyEncoded)) {
         if (escapeStart != -1) {
-          appendHex(builder, s.substring(escapeStart, i), charset);
+          appendHex(builder, string.substring(escapeStart, i), charset);
           escapeStart = -1;
         }
         if (c == '%' && isPartiallyEncoded) {
           // this is an encoded 3-character sequence like "%20"
-          builder.append(s, i, Math.min(i + 3, s.length()));
+          builder.append(string, i, Math.min(i + 3, string.length()));
           i += 2;
         } else if (c == ' ') {
           builder.append('+');
@@ -74,8 +70,16 @@ public abstract class UriCodec {
       }
     }
     if (escapeStart != -1) {
-      appendHex(builder, s.substring(escapeStart, s.length()), charset);
+      appendHex(builder, string.substring(escapeStart, string.length()), charset);
     }
+  }
+
+  private boolean isValidChar(char c, boolean isPartiallyEncoded) {
+    return (c >= 'a' && c <= 'z')
+        || (c >= 'A' && c <= 'Z')
+        || (c >= '0' && c <= '9')
+        || isRetained(c)
+        || (c == '%' && isPartiallyEncoded);
   }
 
 }
