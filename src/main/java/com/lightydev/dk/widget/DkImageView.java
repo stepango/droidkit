@@ -93,6 +93,10 @@ public class DkImageView extends ImageView {
     }
   }
 
+  public void loadImage(String uri) {
+    loadImage(Uri.parse(uri));
+  }
+
   public void setHwSize(int hwSize) {
     mHwSize = hwSize;
   }

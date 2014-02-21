@@ -101,6 +101,10 @@ public final class ImageLoader {
     getObservableForUri(uri).unregisterObserver(observer);
   }
 
+  public static void unregisterAll(Uri uri) {
+    getObservableForUri(uri).unregisterAll();
+  }
+
   public static void notifyObservers(Uri uri, Bitmap bitmap) {
     getObservableForUri(uri).notifyObservers(bitmap);
   }

@@ -40,7 +40,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public abstract class HttpCursorLoader extends CursorLoader {
 
-  private final AtomicBoolean mUpdate = new AtomicBoolean(true);
+  private final AtomicBoolean mFirstLoad = new AtomicBoolean(true);
 
   private final Object mWaitLock = new Object();
 
@@ -59,7 +59,7 @@ public abstract class HttpCursorLoader extends CursorLoader {
 
   @Override
   public Cursor loadInBackground() {
-    if (mUpdate.compareAndSet(true, false) && waitForRequest()) {
+    if (mFirstLoad.compareAndSet(true, false) && waitForRequest()) {
       synchronized (mWaitLock) {
         try {
           mWaitLock.wait();
@@ -73,7 +73,7 @@ public abstract class HttpCursorLoader extends CursorLoader {
 
   @Override
   protected void onForceLoad() {
-    if (mUpdate.compareAndSet(true, false)) {
+    if (mFirstLoad.get()) {
       mHttpRequest.set(newRequest().setCallback(mHttpCallback));
       mHttpRequest.get().send();
     }

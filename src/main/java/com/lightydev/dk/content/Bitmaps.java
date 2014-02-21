@@ -40,10 +40,6 @@ public final class Bitmaps {
   private Bitmaps() {
   }
 
-  public static Bitmap decodeFile(String filePath, int width, int height) {
-    return decodeFile(filePath, Math.max(width, height));
-  }
-
   public static Bitmap decodeFile(String filePath, int hwSize) {
     if (hwSize > 0) {
       final BitmapFactory.Options ops = new BitmapFactory.Options();
@@ -54,14 +50,6 @@ public final class Bitmaps {
       return BitmapFactory.decodeFile(filePath, ops);
     }
     return BitmapFactory.decodeFile(filePath);
-  }
-
-  public static Bitmap decodeStream(InputStream stream, int width, int height) {
-    return decodeStream(stream, null, Math.max(width, height));
-  }
-
-  public static Bitmap decodeStream(InputStream stream, Rect outPadding, int width, int height) {
-    return decodeStream(stream, outPadding, Math.max(width, height));
   }
 
   public static Bitmap decodeStream(InputStream stream, int hwSize) {

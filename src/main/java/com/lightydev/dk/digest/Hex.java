@@ -22,16 +22,31 @@ package com.lightydev.dk.digest;
  */
 public final class Hex {
 
-  private static final String HEX_CHARS = "0123456789abcdef";
+  private static final char[] DIGITS = {
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+      'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+      'u', 'v', 'w', 'x', 'y', 'z'
+  };
+
+  private static final char[] UPPER_CASE_DIGITS = {
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+      'U', 'V', 'W', 'X', 'Y', 'Z'
+  };
 
   private Hex() {
   }
 
   public static String toHexString(byte[] data) {
+    return toHexString(data, false);
+  }
+
+  public static String toHexString(byte[] data, boolean upperCase) {
     final StringBuilder sb = new StringBuilder(data.length * 2);
     for (final byte b : data) {
-      final int bit = b & 0xff;
-      sb.append(HEX_CHARS.charAt(bit >> 4)).append(HEX_CHARS.charAt(bit & 0xf));
+      sb.append(byteToHexString(b, upperCase));
     }
     return sb.toString().trim();
   }
@@ -44,6 +59,14 @@ public final class Hex {
       bytes[k] += (byte) (Character.digit(hex.charAt(i + 1), 16));
     }
     return bytes;
+  }
+
+  public static String byteToHexString(byte b, boolean upperCase) {
+    char[] digits = upperCase ? UPPER_CASE_DIGITS : DIGITS;
+    char[] buf = new char[2];
+    buf[0] = digits[(b >> 4) & 0xf];
+    buf[1] = digits[b & 0xf];
+    return new String(buf, 0, 2);
   }
 
 }
