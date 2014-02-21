@@ -16,6 +16,7 @@
 
 package com.lightydev.dk.http;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.lightydev.dk.digest.Hash;
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
@@ -46,13 +49,6 @@ public final class HttpUtils {
 
   public static final String KEY_VALUE_SEPARATOR = "=";
 
-  private static final UriCodec ASCII_CODEC = new UriCodec() {
-    @Override
-    protected boolean isRetained(char c) {
-      return c <= 127;
-    }
-  };
-
   private HttpUtils() {
   }
 
@@ -65,9 +61,13 @@ public final class HttpUtils {
   }
 
   public static String toAsciiUrl(String url) {
-    final StringBuilder result = new StringBuilder();
-    ASCII_CODEC.appendEncoded(result, url);
-    return result.toString();
+    final Uri uri = Uri.parse(url);
+    try {
+      return new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), uri.getQuery(), uri.getFragment())
+          .toASCIIString();
+    } catch (URISyntaxException e) {
+      return url;
+    }
   }
 
   public static String toQueryString(Map<String, String> args) {
