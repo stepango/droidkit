@@ -26,6 +26,7 @@ import android.os.Build;
 import android.util.TypedValue;
 import android.view.ActionProvider;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 
@@ -43,7 +44,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @version 1.0
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class ShareActionProvider extends ActionProvider {
+public class ShareActionProvider extends ActionProvider implements MenuItem.OnMenuItemClickListener {
 
   private final Context mContext;
 
@@ -107,6 +108,11 @@ public class ShareActionProvider extends ActionProvider {
     return true;
   }
 
+  @Override
+  public boolean onMenuItemClick(MenuItem item) {
+    return false;
+  }
+
   protected void onPrepareSubMenu(SubMenu subMenu, PackageManager pm, List<ResolveInfo> activityList, int count) {
     for (int i = 0; i < count; ++i) {
       final ResolveInfo activity = activityList.get(i);
@@ -114,7 +120,8 @@ public class ShareActionProvider extends ActionProvider {
       if (intent != null) {
         subMenu.add(Menu.NONE, i, i, activity.loadLabel(pm))
             .setIcon(activity.loadIcon(pm))
-            .setIntent(intent);
+            .setIntent(intent)
+            .setOnMenuItemClickListener(this);
       } else {
         mReloadActivities.compareAndSet(false, true);
       }

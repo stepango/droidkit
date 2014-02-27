@@ -20,7 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
-import com.lightydev.dk.io.DkInputStream;
+import com.lightydev.dk.io.PoolInputStream;
 import com.lightydev.dk.io.IOUtils;
 import com.lightydev.dk.log.Logger;
 
@@ -58,7 +58,7 @@ public final class Bitmaps {
 
   public static Bitmap decodeStream(InputStream stream, Rect outPadding, int hwSize) {
     if (hwSize > 0) {
-      final InputStream localIn = new DkInputStream(stream);
+      final InputStream localIn = new PoolInputStream(stream);
       try {
         final BitmapFactory.Options ops = new BitmapFactory.Options();
         ops.inJustDecodeBounds = true;

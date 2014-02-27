@@ -16,23 +16,23 @@
 
 package com.lightydev.dk.io;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class DkInputStream extends BufferedInputStream {
+public class PoolOutputStream extends BufferedOutputStream {
 
-  public DkInputStream(InputStream in) {
-    super(in, 1);
+  public PoolOutputStream(OutputStream out) {
+    super(out, 1);
     buf = ByteArrayPool.getInstance().obtain();
   }
 
   @Override
-  public void close() throws IOException {
+  public synchronized void close() throws IOException {
     ByteArrayPool.getInstance().free(buf);
     super.close();
   }

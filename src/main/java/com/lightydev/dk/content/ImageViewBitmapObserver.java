@@ -26,17 +26,17 @@ import com.lightydev.dk.util.Observer;
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public class ImageViewBitmapObserver implements Observer<Bitmap> {
+class ImageViewBitmapObserver implements Observer<Bitmap> {
 
   private final ImageView mImageView;
 
   private final boolean mAutoUnregister;
 
-  public ImageViewBitmapObserver(ImageView imageView) {
+  ImageViewBitmapObserver(ImageView imageView) {
     this(imageView, true);
   }
 
-  private ImageViewBitmapObserver(ImageView imageView, boolean autoUnregister) {
+  ImageViewBitmapObserver(ImageView imageView, boolean autoUnregister) {
     mImageView = imageView;
     mAutoUnregister = autoUnregister;
   }

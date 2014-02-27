@@ -23,6 +23,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 
 import com.lightydev.dk.concurrent.CpuCoreExecutor;
+import com.lightydev.dk.io.ByteArrayPool;
+import com.lightydev.dk.io.CharArrayPool;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -56,5 +58,9 @@ public final class DroidKit {
     return DEBUG_MODE.get();
   }
 
+  public static void onLowMemory() {
+    ByteArrayPool.getInstance().onLowMemory();
+    CharArrayPool.getInstance().onLowMemory();
+  }
 
 }

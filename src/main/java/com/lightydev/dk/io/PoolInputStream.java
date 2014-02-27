@@ -14,34 +14,27 @@
  * limitations under the License.
  */
 
-package com.lightydev.dk.util;
+package com.lightydev.dk.io;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
  * @version 1.0
  */
-public abstract class ArrayPool<T> {
+public class PoolInputStream extends BufferedInputStream {
 
-  private final Queue<T> mPool = new ConcurrentLinkedQueue<>();
-
-  public T obtain() {
-    if (mPool.isEmpty()) {
-      return createEntry();
-    }
-    return mPool.poll();
+  public PoolInputStream(InputStream in) {
+    super(in, 1);
+    buf = ByteArrayPool.getInstance().obtain();
   }
 
-  public void free(T entry) {
-    mPool.add(entry);
+  @Override
+  public void close() throws IOException {
+    ByteArrayPool.getInstance().free(buf);
+    super.close();
   }
-
-  public void onLowMemory() {
-    mPool.clear();
-  }
-
-  protected abstract T createEntry();
 
 }

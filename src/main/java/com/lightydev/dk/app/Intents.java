@@ -114,16 +114,12 @@ public final class Intents {
     return intent;
   }
 
-  public static Intent takePhoto(String file) {
+  public static Intent takePhoto(Uri output) {
     final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    if (!TextUtils.isEmpty(file)) {
-      intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(file)));
+    if (output != null) {
+      intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
     }
     return intent;
-  }
-
-  public static Intent openFile(String path, String mimeType) {
-    return openFile(Uri.parse(path), mimeType);
   }
 
   public static Intent openFile(File file, String mimeType) {
