@@ -69,6 +69,13 @@ public abstract class SQLiteTable {
     throw new UnsupportedOperationException();
   }
 
+  /**
+   * @since 2.2.1
+   */
+  protected void onContentChanged() {
+
+  }
+
   protected final String getFtsTableName() {
     return SQLite.withFtsSfx(getTableName());
   }

@@ -60,6 +60,9 @@ public final class DroidKit {
     return DEBUG_MODE.get();
   }
 
+  /**
+   * @since 2.2.1
+   */
   public static int nextSequence() {
     return SEQUENCE.incrementAndGet();
   }

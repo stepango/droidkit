@@ -26,7 +26,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -65,7 +64,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
       mHelper = new SQLiteHelper(getContext(), mSchema);
       return true;
     } catch (PackageManager.NameNotFoundException e) {
-      throw new SQLiteException(e.getMessage(), e);
+      throw new SQLiteExceptionCompat(e.getMessage(), e);
     }
   }
 
@@ -84,7 +83,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return withNotificationUri(uri, mSchema.acquireTable(uri)
             .fts(mHelper.getReadableDatabase(), uri.getLastPathSegment(), columns, where, whereArgs, orderBy));
       default:
-        throw new SQLiteException(UNKNOWN_URI + uri);
+        throw new SQLiteExceptionCompat(UNKNOWN_URI + uri);
     }
   }
 
@@ -97,7 +96,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
       case SQLiteUriMatcher.MATCH_ID:
         return MIME_ITEM + mSchema.acquireTable(uri).getTableName();
       default:
-        throw new SQLiteException(UNKNOWN_URI + uri);
+        throw new SQLiteExceptionCompat(UNKNOWN_URI + uri);
     }
   }
 
@@ -111,7 +110,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return withAppendedId(uri, mSchema.acquireTable(uri)
             .insertById(mHelper.getWritableDatabase(), values, uri.getLastPathSegment()));
       default:
-        throw new SQLiteException(UNKNOWN_URI + uri);
+        throw new SQLiteExceptionCompat(UNKNOWN_URI + uri);
     }
   }
 
@@ -125,7 +124,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return notifyChangeIfNecessary(uri, mSchema.acquireTable(uri)
             .deleteById(mHelper.getWritableDatabase(), uri.getLastPathSegment()));
       default:
-        throw new SQLiteException(UNKNOWN_URI + uri);
+        throw new SQLiteExceptionCompat(UNKNOWN_URI + uri);
     }
   }
 
@@ -139,7 +138,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
         return notifyChangeIfNecessary(uri, mSchema.acquireTable(uri)
             .updateById(mHelper.getWritableDatabase(), values, uri.getLastPathSegment()));
       default:
-        throw new SQLiteException(UNKNOWN_URI + uri);
+        throw new SQLiteExceptionCompat(UNKNOWN_URI + uri);
     }
   }
 
@@ -163,7 +162,7 @@ public abstract class SQLiteContentProvider extends ContentProvider {
       case SQLiteUriMatcher.MATCH_ID:
         throw new UnsupportedOperationException();
       default:
-        throw new SQLiteException(UNKNOWN_URI + uri);
+        throw new SQLiteExceptionCompat(UNKNOWN_URI + uri);
     }
   }
 
@@ -195,12 +194,14 @@ public abstract class SQLiteContentProvider extends ContentProvider {
   private Uri withAppendedId(Uri uri, long id) {
     final Uri baseUri = SQLite.baseUri(uri);
     getContext().getContentResolver().notifyChange(baseUri, null);
+    mSchema.acquireTable(baseUri).onContentChanged();
     return ContentUris.withAppendedId(baseUri, id);
   }
 
   private int notifyChangeIfNecessary(Uri uri, int affectedRows) {
     if (affectedRows > 0) {
       getContext().getContentResolver().notifyChange(uri, null);
+      mSchema.acquireTable(uri).onContentChanged();
     }
     return affectedRows;
   }
