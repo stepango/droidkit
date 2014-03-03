@@ -31,6 +31,7 @@ import java.io.File;
  * <br />
  * <strong color="red">Will be removed in 2.3.1</strong>
  */
+@Deprecated
 public final class Intents {
 
   public static final String PLAY_STORE_APPS = "apps";
