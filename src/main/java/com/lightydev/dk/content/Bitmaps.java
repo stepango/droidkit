@@ -18,7 +18,9 @@ package com.lightydev.dk.content;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.ExifInterface;
 
 import com.lightydev.dk.io.IOUtils;
 import com.lightydev.dk.io.PoolInputStream;
@@ -49,6 +51,24 @@ public final class Bitmaps {
       return BitmapFactory.decodeFile(filePath, ops);
     }
     return BitmapFactory.decodeFile(filePath);
+  }
+
+  public static Bitmap decodeFileWithExif(String filePath, int hwSize) {
+    final Bitmap bitmap = decodeFile(filePath, hwSize);
+    final int orientation = getExifOrientation(filePath);
+    if (orientation == ExifInterface.ORIENTATION_NORMAL
+        || orientation == ExifInterface.ORIENTATION_UNDEFINED) {
+      return bitmap;
+    }
+    try {
+      return Bitmap.createBitmap(
+          bitmap, 0, 0,
+          bitmap.getWidth(), bitmap.getHeight(),
+          getExifMatrix(orientation), true
+      );
+    } finally {
+      bitmap.recycle();
+    }
   }
 
   public static Bitmap decodeStream(InputStream stream, int hwSize) {
@@ -88,6 +108,30 @@ public final class Bitmaps {
       return ratio > 0 ? (int) Math.pow(2, Math.floor(Math.log(ratio) / LN_2)) : 1;
     }
     return 1;
+  }
+
+  private static int getExifOrientation(String filePath) {
+    try {
+      return new ExifInterface(filePath).getAttributeInt(
+          ExifInterface.TAG_ORIENTATION,
+          ExifInterface.ORIENTATION_NORMAL
+      );
+    } catch (IOException e) {
+      Logger.error(e);
+    }
+    return ExifInterface.ORIENTATION_UNDEFINED;
+  }
+
+  private static Matrix getExifMatrix(int orientation) {
+    final Matrix matrix = new Matrix();
+    if (orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+      matrix.setRotate(180);
+    } else if (orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+      matrix.setRotate(90);
+    } else if (orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+      matrix.setRotate(-90);
+    }
+    return matrix;
   }
 
 }
