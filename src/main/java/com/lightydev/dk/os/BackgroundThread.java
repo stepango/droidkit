@@ -28,7 +28,7 @@ public final class BackgroundThread extends HandlerThread {
 
   private static final AtomicReference<Handler> HANDLER = new AtomicReference<>();
 
-  private BackgroundThread() {
+  BackgroundThread() {
     super("android.bg", android.os.Process.THREAD_PRIORITY_BACKGROUND);
   }
 

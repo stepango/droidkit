@@ -80,9 +80,6 @@ public final class ImageLoader {
   }
 
   public static void loadImage(Uri uri, int hwSize) {
-    if (uri == null) {
-      throw new NullPointerException("uri");
-    }
     final String scheme = uri.getScheme();
     final String key = HttpUtils.getUrlHash(uri.toString());
     final Bitmap bitmap = BitmapLruCache.getInstance().get(key);
@@ -140,7 +137,7 @@ public final class ImageLoader {
 
     private final int mHwSize;
 
-    private LoadImageCallback(Uri uri, String key, int hwSize) {
+    public LoadImageCallback(Uri uri, String key, int hwSize) {
       mUri = uri;
       mKey = key;
       mHwSize = hwSize;
@@ -172,7 +169,8 @@ public final class ImageLoader {
 
     private final int mHwSize;
 
-    private LoadImageTask(Uri uri, int hwSize) {
+    public LoadImageTask(Uri uri, int hwSize) {
+      super();
       mUri = uri;
       mHwSize = hwSize;
     }

@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
 
 import com.lightydev.dk.R;
@@ -88,7 +89,12 @@ public class DkImageView extends ImageView {
       unregisterObserver();
       mImageUri = uri;
       ImageLoader.registerObserver(mImageUri, mObserver);
-      ImageLoader.loadImage(mImageUri);
+      if (mHwSize == 0 && mUseOptimalSize) {
+        final DisplayMetrics dm = getResources().getDisplayMetrics();
+        ImageLoader.loadImage(mImageUri, Math.max(dm.widthPixels, dm.heightPixels));
+      } else {
+        ImageLoader.loadImage(mImageUri, mHwSize);
+      }
     }
   }
 

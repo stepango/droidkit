@@ -44,6 +44,7 @@ public abstract class PagerCursorAdapter extends PagerAdapter {
   }
 
   protected PagerCursorAdapter(Context context, Cursor cursor) {
+    super();
     mContext = context;
     mCursor = cursor;
   }

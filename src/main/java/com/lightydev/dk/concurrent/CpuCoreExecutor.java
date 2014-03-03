@@ -16,6 +16,8 @@
 
 package com.lightydev.dk.concurrent;
 
+import com.lightydev.dk.util.Reflect;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.PriorityBlockingQueue;
@@ -51,7 +53,7 @@ public class CpuCoreExecutor extends ThreadPoolExecutor {
     }
   }
 
-  private static final class ComparableTask implements Runnable, Comparable<Runnable> {
+  private static final class ComparableTask implements Runnable, Comparable<ComparableTask> {
 
     private final Runnable mDelegate;
 
@@ -60,7 +62,24 @@ public class CpuCoreExecutor extends ThreadPoolExecutor {
     }
 
     @Override
-    public int compareTo(Runnable another) {
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (!Reflect.classEquals(this, o)) {
+        return false;
+      }
+      final ComparableTask another = (ComparableTask) o;
+      return !(mDelegate != null ? !mDelegate.equals(another.mDelegate) : another.mDelegate != null);
+    }
+
+    @Override
+    public int hashCode() {
+      return mDelegate != null ? mDelegate.hashCode() : 0;
+    }
+
+    @Override
+    public int compareTo(ComparableTask another) {
       return 0;
     }
 

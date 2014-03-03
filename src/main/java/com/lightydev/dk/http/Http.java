@@ -49,28 +49,28 @@ public final class Http {
 
   public static AsyncHttpEntry get(String url) {
     if (url == null) {
-      throw new NullPointerException(URL);
+      throw new IllegalArgumentException(URL);
     }
     return new AsyncHttpEntry(AsyncHttpEntry.GET, url, SEQUENCE.incrementAndGet());
   }
 
   public static AsyncHttpEntry post(String url) {
     if (url == null) {
-      throw new NullPointerException(URL);
+      throw new IllegalArgumentException(URL);
     }
     return new AsyncHttpEntry(AsyncHttpEntry.POST, url, SEQUENCE.incrementAndGet());
   }
 
   public static AsyncHttpEntry put(String url) {
     if (url == null) {
-      throw new NullPointerException(URL);
+      throw new IllegalArgumentException(URL);
     }
     return new AsyncHttpEntry(AsyncHttpEntry.PUT, url, SEQUENCE.incrementAndGet());
   }
 
   public static AsyncHttpEntry delete(String url) {
     if (url == null) {
-      throw new NullPointerException(URL);
+      throw new IllegalArgumentException(URL);
     }
     return new AsyncHttpEntry(AsyncHttpEntry.DELETE, url, SEQUENCE.incrementAndGet());
   }

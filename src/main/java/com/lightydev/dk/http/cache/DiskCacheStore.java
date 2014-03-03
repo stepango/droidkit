@@ -18,6 +18,7 @@ package com.lightydev.dk.http.cache;
 
 import android.text.TextUtils;
 
+import com.lightydev.dk.DroidKit;
 import com.lightydev.dk.http.HttpDate;
 import com.lightydev.dk.http.HttpUtils;
 import com.lightydev.dk.io.IOUtils;
@@ -64,8 +65,8 @@ public class DiskCacheStore implements CacheStore {
     mCacheDir = cacheDir;
     mCachePolicy = policy;
     mDebugMode = debugMode;
-    if (!mCacheDir.exists()) {
-      mCacheDir.mkdirs();
+    if (!mCacheDir.exists() && !mCacheDir.mkdirs() && DroidKit.isInDebugMode()) {
+      Logger.error("Can't create cache dir");
     }
   }
 
@@ -144,7 +145,9 @@ public class DiskCacheStore implements CacheStore {
   @Override
   public boolean clear() {
     for (final File file : mCacheDir.listFiles()) {
-      file.delete();
+      if (!file.delete() && DroidKit.isInDebugMode()) {
+        Logger.error("Can't delete cached file");
+      }
     }
     return mCacheDir.delete();
   }
@@ -185,13 +188,8 @@ public class DiskCacheStore implements CacheStore {
     }
   }
 
-  private void removeCacheEntry(File cacheFile, File metaFile) {
-    if (metaFile.exists()) {
-      metaFile.delete();
-    }
-    if (cacheFile.exists()) {
-      cacheFile.delete();
-    }
+  private boolean removeCacheEntry(File cacheFile, File metaFile) {
+    return metaFile.delete() && cacheFile.delete();
   }
 
   public static class Entry implements CacheStore.Entry {

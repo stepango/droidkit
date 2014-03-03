@@ -171,8 +171,6 @@ public class SwipeToDismissDetector implements View.OnTouchListener, AbsListView
     if (mLastMotion != null) {
       mLastMotion.recycle();
     }
-    mVelocityTracker = null;
-    mLastMotion = null;
   }
 
   private final class DataSetObserverImpl extends DataSetObserver {

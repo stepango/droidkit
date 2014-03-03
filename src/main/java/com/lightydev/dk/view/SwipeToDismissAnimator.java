@@ -107,7 +107,6 @@ class SwipeToDismissAnimator {
   }
 
   public void recycle() {
-    mHitChild = null;
     mHitPosition = AbsListView.INVALID_POSITION;
     mIsDrag = false;
   }
@@ -125,7 +124,7 @@ class SwipeToDismissAnimator {
   private float getFlingTranslationX(float velocityX, float deltaX) {
     final int listViewWidth = mHelper.getListViewWidth();
     final float absVelocityX = Math.abs(velocityX);
-    if (Math.abs(deltaX) > listViewWidth / 2) {
+    if (Math.abs(deltaX) > (float) listViewWidth / 2) {
       return deltaX > 0 ? listViewWidth : -listViewWidth;
     } else if (mHelper.getMinFlingVelocity() <= absVelocityX
         && absVelocityX <= mHelper.getMaxFlingVelocity()) {

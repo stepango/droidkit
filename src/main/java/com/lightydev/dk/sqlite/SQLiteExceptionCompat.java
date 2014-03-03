@@ -24,6 +24,7 @@ public class SQLiteExceptionCompat extends RuntimeException {
   private static final long serialVersionUID = -4985577386117744299L;
 
   public SQLiteExceptionCompat() {
+    super();
   }
 
   public SQLiteExceptionCompat(String error) {

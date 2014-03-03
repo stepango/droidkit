@@ -31,7 +31,7 @@ public class PoolOutputStream extends BufferedOutputStream {
   }
 
   @Override
-  public synchronized void close() throws IOException {
+  public void close() throws IOException {
     ByteArrayPool.getInstance().free(buf);
     super.close();
   }

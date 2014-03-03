@@ -67,10 +67,10 @@ public class SQLiteSchema {
   SQLiteTable acquireTable(Uri uri) {
     final String tableName = uri.getPathSegments().get(0);
     final SQLiteTable table = mSchema.get(tableName);
-    if (table == null) {
-      throw new SQLiteException("no such table: " + table);
+    if (table != null) {
+      return table;
     }
-    return table;
+    throw new SQLiteException("no such table: " + table);
   }
 
 }
