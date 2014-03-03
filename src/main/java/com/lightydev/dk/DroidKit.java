@@ -28,16 +28,18 @@ import com.lightydev.dk.io.CharArrayPool;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public final class DroidKit {
 
   public static final Executor EXECUTOR = new CpuCoreExecutor();
 
   private static final AtomicBoolean DEBUG_MODE = new AtomicBoolean();
+
+  private static final AtomicInteger SEQUENCE = new AtomicInteger(9000);
 
   private DroidKit() {
   }
@@ -56,6 +58,10 @@ public final class DroidKit {
 
   public static boolean isInDebugMode() {
     return DEBUG_MODE.get();
+  }
+
+  public static int nextSequence() {
+    return SEQUENCE.incrementAndGet();
   }
 
   public static void onLowMemory() {

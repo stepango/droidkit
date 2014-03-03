@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public abstract class PagerCursorAdapter extends PagerAdapter {
 

@@ -27,7 +27,6 @@ import javax.net.ssl.SSLException;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class HttpException extends IOException {
 

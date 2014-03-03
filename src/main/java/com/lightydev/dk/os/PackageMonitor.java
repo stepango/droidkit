@@ -27,7 +27,6 @@ import android.text.TextUtils;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class PackageMonitor extends BroadcastReceiver {
 

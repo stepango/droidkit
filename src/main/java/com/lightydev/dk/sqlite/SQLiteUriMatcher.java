@@ -25,7 +25,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 class SQLiteUriMatcher {
 

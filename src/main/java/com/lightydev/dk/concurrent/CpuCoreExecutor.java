@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class CpuCoreExecutor extends ThreadPoolExecutor {
 

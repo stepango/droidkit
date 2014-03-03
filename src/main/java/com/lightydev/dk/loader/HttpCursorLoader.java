@@ -35,7 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public abstract class HttpCursorLoader extends CursorLoader {

@@ -21,7 +21,6 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public final class Hash {
 

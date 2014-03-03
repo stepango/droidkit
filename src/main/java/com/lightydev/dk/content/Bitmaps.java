@@ -20,8 +20,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 
-import com.lightydev.dk.io.PoolInputStream;
 import com.lightydev.dk.io.IOUtils;
+import com.lightydev.dk.io.PoolInputStream;
 import com.lightydev.dk.log.Logger;
 
 import java.io.IOException;
@@ -29,7 +29,6 @@ import java.io.InputStream;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.1
  */
 public final class Bitmaps {
 

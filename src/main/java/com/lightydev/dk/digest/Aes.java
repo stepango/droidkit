@@ -29,7 +29,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public final class Aes {
 

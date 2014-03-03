@@ -27,8 +27,8 @@ import com.lightydev.dk.http.cache.CacheStore;
 import com.lightydev.dk.http.callback.AsyncHttpCallback;
 import com.lightydev.dk.http.cookie.Cookie;
 import com.lightydev.dk.http.cookie.CookieStore;
-import com.lightydev.dk.log.Logger;
 import com.lightydev.dk.io.IOUtils;
+import com.lightydev.dk.log.Logger;
 import com.lightydev.dk.util.Reflect;
 
 import java.io.IOException;
@@ -45,7 +45,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.2
  */
 public class AsyncHttpEntry implements Runnable, Comparable<AsyncHttpEntry> {
 

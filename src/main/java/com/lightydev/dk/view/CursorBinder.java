@@ -20,7 +20,6 @@ import android.database.Cursor;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public interface CursorBinder {
 

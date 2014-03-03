@@ -20,7 +20,6 @@ import com.lightydev.dk.util.ArrayPool;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class ByteArrayPool extends ArrayPool<byte[]> {
 

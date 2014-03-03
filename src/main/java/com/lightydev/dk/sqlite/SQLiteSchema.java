@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class SQLiteSchema {
 

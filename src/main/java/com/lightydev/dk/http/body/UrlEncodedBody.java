@@ -29,7 +29,6 @@ import java.util.TreeMap;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class UrlEncodedBody implements HttpBody {
 

@@ -25,7 +25,6 @@ import java.util.List;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.1
  */
 public abstract class SQLiteTable {
 

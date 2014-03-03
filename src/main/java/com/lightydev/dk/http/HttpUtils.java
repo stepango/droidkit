@@ -39,7 +39,6 @@ import java.util.Map;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public final class HttpUtils {
 

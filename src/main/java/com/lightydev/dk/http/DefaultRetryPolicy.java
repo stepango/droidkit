@@ -18,7 +18,6 @@ package com.lightydev.dk.http;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class DefaultRetryPolicy implements RetryPolicy {
 

@@ -20,7 +20,6 @@ import java.security.GeneralSecurityException;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class AesException extends GeneralSecurityException {
 

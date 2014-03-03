@@ -25,7 +25,6 @@ import java.net.HttpURLConnection;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 final class HttpStatus {
 

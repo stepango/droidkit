@@ -28,7 +28,6 @@ import java.util.Locale;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public abstract class SQLiteFtsTable extends SQLiteTable {
 

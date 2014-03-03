@@ -31,7 +31,6 @@ import java.util.List;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.1
  */
 public class SQLiteCookie extends SQLiteTable {
 

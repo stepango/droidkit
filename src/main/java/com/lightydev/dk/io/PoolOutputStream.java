@@ -22,7 +22,6 @@ import java.io.OutputStream;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class PoolOutputStream extends BufferedOutputStream {
 

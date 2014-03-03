@@ -18,7 +18,6 @@ package com.lightydev.dk.util;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public interface Observer<T> {
 

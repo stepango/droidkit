@@ -18,7 +18,6 @@ package com.lightydev.dk.sqlite;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public abstract class SQLiteConflictClause<T> {
 

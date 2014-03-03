@@ -23,7 +23,6 @@ import java.util.List;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public class SQLiteTrigger {
 

@@ -38,7 +38,6 @@ import java.util.ArrayList;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
- * @version 1.0
  */
 public abstract class SQLiteContentProvider extends ContentProvider {
 
