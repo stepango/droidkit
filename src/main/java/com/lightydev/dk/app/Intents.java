@@ -26,6 +26,10 @@ import java.io.File;
 
 /**
  * @author =Troy= <Daniel Serdyukov>
+ * @see com.lightydev.dk.app.CommonIntents
+ * @deprecated since 2.2.1, use {@link com.lightydev.dk.app.CommonIntents} instead
+ * <br />
+ * <strong color="red">Will be removed in 2.3.1</strong>
  */
 public final class Intents {
 
