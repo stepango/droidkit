@@ -30,7 +30,7 @@ public class FileLogCollector {
   private static final ThreadLocal<DateFormat> FILE_NAME_FORMAT = new ThreadLocal<DateFormat>() {
     @Override
     protected DateFormat initialValue() {
-      return new SimpleDateFormat("dd.MM.yyyy_HH:mm:ss'.log'");
+      return new SimpleDateFormat("dd.MM.yyyy_HH:mm:ss");
     }
   };
 
@@ -63,8 +63,12 @@ public class FileLogCollector {
     return mFileNameFormat;
   }
 
+  protected String getLogFileName() {
+    return getFileNameFormat().format(new Date());
+  }
+
   protected File newLogFile() {
-    return new File(getLogsDir(), getFileNameFormat().format(new Date()));
+    return new File(getLogsDir(), getLogFileName() + ".log");
   }
 
   protected void onLogFileSaved(File logFile) {

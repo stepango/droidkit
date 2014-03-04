@@ -19,12 +19,15 @@ package com.lightydev.dk.app;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import org.apache.http.protocol.HTTP;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Daniel Serdyukov
@@ -45,14 +48,11 @@ public final class CommonIntents {
     return intent;
   }
 
-  public static Intent sendEmail(String[] to, String subject, String body, Uri attachment) {
-    final Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"));
+  public static Intent sendEmail(String[] to, String subject, String body) {
+    final Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
     intent.putExtra(Intent.EXTRA_EMAIL, to);
     intent.putExtra(Intent.EXTRA_SUBJECT, subject);
     intent.putExtra(Intent.EXTRA_TEXT, body);
-    if (attachment != null) {
-      intent.putExtra(Intent.EXTRA_STREAM, attachment);
-    }
     return intent;
   }
 
@@ -62,25 +62,35 @@ public final class CommonIntents {
     return intent;
   }
 
+  public static Intent share(String text, String mimeType, Uri... attachments) {
+    final Intent intent = new Intent();
+    intent.setType(mimeType);
+    if (attachments.length > 1) {
+      intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+      final ArrayList<CharSequence> textExtra = new ArrayList<>();
+      textExtra.add(text);
+      intent.putCharSequenceArrayListExtra(Intent.EXTRA_TEXT, textExtra);
+      final ArrayList<Parcelable> uris = new ArrayList<>();
+      Collections.addAll(uris, attachments);
+      intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+    } else {
+      intent.setAction(Intent.ACTION_SEND);
+      intent.putExtra(Intent.EXTRA_TEXT, text);
+      intent.putExtra(Intent.EXTRA_STREAM, attachments[0]);
+    }
+    return intent;
+  }
+
   public static Intent shareText(String text) {
-    final Intent intent = new Intent(Intent.ACTION_SEND);
-    intent.setType(HTTP.PLAIN_TEXT_TYPE);
-    intent.putExtra(Intent.EXTRA_TEXT, text);
-    return intent;
+    return share(text, HTTP.PLAIN_TEXT_TYPE);
   }
 
-  public static Intent shareVideo(String text, Uri attachment) {
-    final Intent intent = shareText(text);
-    intent.setType("video/*");
-    intent.putExtra(Intent.EXTRA_STREAM, attachment);
-    return intent;
+  public static Intent shareImage(String text, Uri... attachments) {
+    return share(text, "image/*", attachments);
   }
 
-  public static Intent shareImage(String text, Uri attachment) {
-    final Intent intent = shareText(text);
-    intent.setType("image/*");
-    intent.putExtra(Intent.EXTRA_STREAM, attachment);
-    return intent;
+  public static Intent shareVideo(String text, Uri... attachments) {
+    return share(text, "video/*", attachments);
   }
 
   public static Intent openFile(File file, String mimeType) {
