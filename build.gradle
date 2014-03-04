@@ -44,16 +44,3 @@ dependencies {
 apply plugin: 'android-checkstyle'
 apply plugin: 'android-pmd'
 apply plugin: 'android-findbugs'
-
-apply plugin: 'maven'
-
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      repository(url: uri('../maven'))
-      pom.groupId = 'com.lightydev'
-      pom.artifactId = 'droidkit'
-      pom.version = android.defaultConfig.versionName
-    }
-  }
-}
