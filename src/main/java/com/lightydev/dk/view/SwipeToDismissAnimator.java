@@ -76,13 +76,9 @@ class SwipeToDismissAnimator {
     return mIsDrag;
   }
 
-  public void dragHitChild(float deltaX, float touchSlop) {
+  public void dragHitChild(float deltaX) {
     if (mHitChild != null) {
-      if (deltaX > 0) {
-        mHitChild.setTranslationX(deltaX - touchSlop);
-      } else {
-        mHitChild.setTranslationX(deltaX + touchSlop);
-      }
+      mHitChild.setTranslationX(deltaX);
       mHitChild.setAlpha(Math.max(0f, Math.min(1f, 1f - 2f * Math.abs(deltaX) / mHelper.getListViewWidth())));
     }
   }
@@ -107,6 +103,7 @@ class SwipeToDismissAnimator {
   }
 
   public void recycle() {
+    mHitChild = null;
     mHitPosition = AbsListView.INVALID_POSITION;
     mIsDrag = false;
   }

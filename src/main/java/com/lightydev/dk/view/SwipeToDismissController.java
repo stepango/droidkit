@@ -26,7 +26,7 @@ import android.widget.AbsListView;
  * @author Daniel Serdyukov
  * @since 2.2.1
  */
-public class SwipeToDismissDetector implements View.OnTouchListener, AbsListView.OnScrollListener {
+public class SwipeToDismissController implements View.OnTouchListener, AbsListView.OnScrollListener {
 
   private final DataSetObserver mDataSetObserver = new DataSetObserverImpl();
 
@@ -44,12 +44,12 @@ public class SwipeToDismissDetector implements View.OnTouchListener, AbsListView
 
   private boolean mEnabled = true;
 
-  public SwipeToDismissDetector(AbsListView listView, SwipeToDismissCallback callback) {
+  public SwipeToDismissController(AbsListView listView, SwipeToDismissCallback callback) {
     this(listView, callback, null);
   }
 
-  public SwipeToDismissDetector(AbsListView listView, SwipeToDismissCallback callback,
-                                AbsListView.OnScrollListener onScrollListener) {
+  public SwipeToDismissController(AbsListView listView, SwipeToDismissCallback callback,
+                                  AbsListView.OnScrollListener onScrollListener) {
     mHelper = new SwipeToDismissHelper(listView);
     mAnimator = new SwipeToDismissAnimator(mHelper, callback);
     mCallback = callback;
@@ -99,7 +99,8 @@ public class SwipeToDismissDetector implements View.OnTouchListener, AbsListView
   }
 
   protected void onDataSetInvalidated() {
-
+    mAnimator.recycle();
+    recycle();
   }
 
   private boolean isEnabled() {
@@ -146,7 +147,7 @@ public class SwipeToDismissDetector implements View.OnTouchListener, AbsListView
         cancelEvent.recycle();
       }
       if (mAnimator.isDrag()) {
-        mAnimator.dragHitChild(deltaX, mHelper.getTouchSlop());
+        mAnimator.dragHitChild(deltaX);
         return true;
       }
     }
@@ -171,6 +172,8 @@ public class SwipeToDismissDetector implements View.OnTouchListener, AbsListView
     if (mLastMotion != null) {
       mLastMotion.recycle();
     }
+    mVelocityTracker = null;
+    mLastMotion = null;
   }
 
   private final class DataSetObserverImpl extends DataSetObserver {
