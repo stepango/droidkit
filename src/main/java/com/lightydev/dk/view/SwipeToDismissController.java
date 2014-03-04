@@ -167,7 +167,9 @@ public class SwipeToDismissController implements View.OnTouchListener, AbsListVi
   }
 
   private void recycle() {
-    mVelocityTracker.recycle();
+    if (mVelocityTracker != null) {
+      mVelocityTracker.recycle();
+    }
     mAnimator.setDrag(false);
     if (mLastMotion != null) {
       mLastMotion.recycle();
