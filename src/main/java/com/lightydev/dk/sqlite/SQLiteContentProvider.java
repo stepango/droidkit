@@ -194,14 +194,14 @@ public abstract class SQLiteContentProvider extends ContentProvider {
   private Uri withAppendedId(Uri uri, long id) {
     final Uri baseUri = SQLite.baseUri(uri);
     getContext().getContentResolver().notifyChange(baseUri, null);
-    mSchema.acquireTable(baseUri).onContentChanged();
+    mSchema.acquireTable(baseUri).onContentChanged(getContext().getContentResolver());
     return ContentUris.withAppendedId(baseUri, id);
   }
 
   private int notifyChangeIfNecessary(Uri uri, int affectedRows) {
     if (affectedRows > 0) {
       getContext().getContentResolver().notifyChange(uri, null);
-      mSchema.acquireTable(uri).onContentChanged();
+      mSchema.acquireTable(uri).onContentChanged(getContext().getContentResolver());
     }
     return affectedRows;
   }

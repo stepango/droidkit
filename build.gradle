@@ -18,8 +18,8 @@ android {
   defaultConfig {
     minSdkVersion 14
     targetSdkVersion 19
-    versionCode 202002
-    versionName "2.2.2"
+    versionCode 202003
+    versionName "2.2.3"
   }
 
   compileOptions {

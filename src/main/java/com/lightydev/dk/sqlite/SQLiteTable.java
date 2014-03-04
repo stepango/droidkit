@@ -16,6 +16,7 @@
 
 package com.lightydev.dk.sqlite;
 
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -72,7 +73,7 @@ public abstract class SQLiteTable {
   /**
    * @since 2.2.1
    */
-  protected void onContentChanged() {
+  protected void onContentChanged(ContentResolver db) {
 
   }
 
