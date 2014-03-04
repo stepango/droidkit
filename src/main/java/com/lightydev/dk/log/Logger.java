@@ -31,17 +31,17 @@ public final class Logger {
 
   private static final String EX_DIVIDER = "\n======================\n";
 
-  private static final AtomicReference<String> sTag = new AtomicReference<>("DroidKit");
+  private static final AtomicReference<String> TAG = new AtomicReference<>("DroidKit");
 
-  private static final AtomicBoolean sEnabled = new AtomicBoolean();
+  private static final AtomicBoolean ENABLED = new AtomicBoolean();
 
   private Logger() {
   }
 
   public static void setEnabled(String tag, boolean enabled) {
-    sEnabled.set(enabled);
+    ENABLED.set(enabled);
     if (!TextUtils.isEmpty(tag)) {
-      sTag.set(tag);
+      TAG.set(tag);
     }
   }
 
@@ -50,32 +50,36 @@ public final class Logger {
   }
 
   public static void debug(String format, Object... args) {
-    if (sEnabled.get()) {
-      Log.d(sTag.get(), makeMessage(format, args));
+    if (ENABLED.get()) {
+      Log.d(TAG.get(), makeMessage(format, args));
     }
   }
 
   public static void info(String format, Object... args) {
-    if (sEnabled.get()) {
-      Log.i(sTag.get(), makeMessage(format, args));
+    if (ENABLED.get()) {
+      Log.i(TAG.get(), makeMessage(format, args));
     }
   }
 
   public static void warn(String format, Object... args) {
-    if (sEnabled.get()) {
-      Log.w(sTag.get(), makeMessage(format, args));
+    if (ENABLED.get()) {
+      Log.w(TAG.get(), makeMessage(format, args));
     }
   }
 
   public static void error(String format, Object... args) {
-    if (sEnabled.get()) {
-      Log.e(sTag.get(), makeMessage(format, args));
+    if (ENABLED.get()) {
+      Log.e(TAG.get(), makeMessage(format, args));
     }
   }
 
   public static void error(Throwable e) {
-    if (sEnabled.get()) {
-      Log.e(sTag.get(), e.getMessage() + EX_DIVIDER + TextUtils.join("\n", e.getStackTrace()));
+    if (ENABLED.get()) {
+      if (e.getCause() == null) {
+        Log.e(TAG.get(), e.getMessage() + EX_DIVIDER + TextUtils.join("\n", e.getStackTrace()));
+      } else {
+        Log.e(TAG.get(), e.getMessage() + EX_DIVIDER + TextUtils.join("\n", e.getCause().getStackTrace()));
+      }
     }
   }
 

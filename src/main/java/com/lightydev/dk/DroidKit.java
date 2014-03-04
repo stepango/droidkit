@@ -26,6 +26,7 @@ import com.lightydev.dk.concurrent.CpuCoreExecutor;
 import com.lightydev.dk.io.ByteArrayPool;
 import com.lightydev.dk.io.CharArrayPool;
 
+import java.io.File;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,6 +43,20 @@ public final class DroidKit {
   private static final AtomicInteger SEQUENCE = new AtomicInteger(9000);
 
   private DroidKit() {
+  }
+
+  /**
+   * @since 2.3.1
+   */
+  public static File getLogsDir(Context context) {
+    return context.getExternalFilesDir("logs");
+  }
+
+  /**
+   * @since 2.3.1
+   */
+  public static File getCrashLogsDir(Context context) {
+    return context.getExternalFilesDir("crash_logs");
   }
 
   public static ProviderInfo getProviderInfo(Context context, Class<? extends ContentProvider> provider, int flags)
