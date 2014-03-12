@@ -33,7 +33,7 @@ Async Network
         public void onError(final HttpException e) {
             //handle error
         }
-    });
+    }).send();
 
 ## License
 
