@@ -49,7 +49,8 @@ public final class CommonIntents {
   }
 
   public static Intent sendEmail(String[] to, String subject, String body) {
-    final Intent intent = new Intent(Intent.ACTION_SEND, Uri.parse("mailto:"));
+    final Intent intent = new Intent(Intent.ACTION_SEND);
+    intent.setType("message/rfc822");
     intent.putExtra(Intent.EXTRA_EMAIL, to);
     intent.putExtra(Intent.EXTRA_SUBJECT, subject);
     intent.putExtra(Intent.EXTRA_TEXT, body);
